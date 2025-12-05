@@ -1,7 +1,7 @@
 /// main.cpp
 ///
 /// Entrypoint for Rivet Doorstop.
-/// This DLL must be compiled as `version.dll` and placed alongside ScrapMechanic.exe
+/// This DLL must be compiled as `AudioSes.dll` and placed alongside ScrapMechanic.exe
 /// This will cause Doorstop to load and initialize itself before the game starts.
 /// This way we can proxy all relevant calls and inject our own code.
 ///
@@ -9,6 +9,7 @@
 
 #include "config.h"
 #include "cli.h"
+#include "compat.h"
 
 #include <print>
 
@@ -39,7 +40,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 		config.setValue("rivet-target", target);
 	}
 
-	std::println("Rivet Doorstop initialized:\n  Enable: {}\n  Log: {}\n  Target: {}", enable ? "true" : "false", log, target);
-
+	Rivet::Compat::InitializeFunctionPointers();
 	return TRUE;
 }

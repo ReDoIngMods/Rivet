@@ -5,8 +5,6 @@ VisualStudioVersion = 17.14.36414.22 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Doorstop", "Doorstop\Doorstop.vcxproj", "{ADC9313D-D3DA-4795-B621-8357689176C0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dummy", "Dummy\Dummy.vcxproj", "{221B8C93-A7D4-44D8-9DC3-8B48B20C4489}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
