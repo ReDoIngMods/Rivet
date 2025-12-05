@@ -41,5 +41,29 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	}
 
 	Rivet::Compat::InitializeFunctionPointers();
+
+	if (enable) {
+		// Resolve to full path
+		char fullTarget[MAX_PATH];
+		GetFullPathNameA(target.c_str(), MAX_PATH, fullTarget, nullptr);
+
+		HMODULE hTarget = LoadLibraryA(fullTarget);
+		if (!hTarget) {
+			DWORD error = GetLastError();
+			LPSTR errorMsg = nullptr;
+			FormatMessageA(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+				nullptr,
+				error,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+				(LPSTR)&errorMsg,
+				0,
+				nullptr
+			);
+
+			return TRUE;
+		}
+	}
+
 	return TRUE;
 }
