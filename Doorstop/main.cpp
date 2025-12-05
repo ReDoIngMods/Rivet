@@ -9,6 +9,7 @@
 
 #include "config.h"
 #include "cli.h"
+#include "logging.h"
 #include "compat.h"
 
 #include <print>
@@ -40,15 +41,22 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 		config.setValue("rivetTarget", target);
 	}
 
+	Rivet::Logger logger(log);
+	Rivet::Logger::Info("Rivet Doorstop starting...");
+
 	Rivet::Compat::InitializeFunctionPointers();
+	Rivet::Logger::Info("Rivet Doorstop initialized.");
 
 	if (enable) {
 		// Resolve to full path
 		char fullTarget[MAX_PATH];
 		GetFullPathNameA(target.c_str(), MAX_PATH, fullTarget, nullptr);
+		Rivet::Logger::Info("Loading target DLL: %s", fullTarget);
 
 		HMODULE hTarget = LoadLibraryA(fullTarget);
 		if (!hTarget) {
+			Rivet::Logger::Error("Failed to load target DLL: %s", fullTarget);
+
 			DWORD error = GetLastError();
 			LPSTR errorMsg = nullptr;
 			FormatMessageA(
@@ -60,6 +68,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 				0,
 				nullptr
 			);
+			if (errorMsg) {
+				Rivet::Logger::Error("Error %d: %s", error, errorMsg);
+				LocalFree(errorMsg);
+			}
 
 			return TRUE;
 		}
