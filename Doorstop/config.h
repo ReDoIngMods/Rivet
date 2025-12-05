@@ -8,9 +8,9 @@ namespace Rivet {
 		Config(std::wstring_view configPath = L".\\RivetDoorstop.ini") : configPath_(configPath) {
             if (!fs::exists(configPath_)) {
                 WritePrivateProfileStringW(L"RivetDoorstop", nullptr, nullptr, configPath_.data()); // Create empty file
-				WritePrivateProfileStringW(L"RivetDoorstop", L"rivet-enable", L"false", configPath_.data()); // don't enable by default
-                WritePrivateProfileStringW(L"RivetDoorstop", L"rivet-log", L".\\rivet.log", configPath_.data());
-                WritePrivateProfileStringW(L"RivetDoorstop", L"rivet-target", L".\\rivet.dll", configPath_.data());
+				WritePrivateProfileStringW(L"RivetDoorstop", L"rivetEnable", L"false", configPath_.data()); // don't enable by default
+                WritePrivateProfileStringW(L"RivetDoorstop", L"rivetLog", L"rivet.log", configPath_.data());
+                WritePrivateProfileStringW(L"RivetDoorstop", L"rivetTarget", L"rivet.dll", configPath_.data());
 			}
         }
 

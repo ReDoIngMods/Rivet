@@ -17,7 +17,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	if (fdwReason != DLL_PROCESS_ATTACH)
 		return TRUE;
 
-	// -rivet-enable | Enable Rivet mod loading
+
 	// -rivet-log <file> | Enable logging to <file>
 	// -rivet-target <path> | Set the target directory for dll (default: ./rivet.dll)
 	// -rivet-save-config | Save the current config (with modified values) to RivetDoorstop.ini
@@ -25,19 +25,19 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	Rivet::Config config;
 	Rivet::CLI cli;
 
-	auto cfgEnable = config.getValue<bool>("rivet-enable", false);
-	auto cfgLog = config.getValue<std::string>("rivet-log", ".\\rivet.log");
-	auto cfgTarget = config.getValue<std::string>("rivet-target", ".\\rivet.dll");
+	auto cfgEnable	= config.getValue<bool>("rivetEnable", false);
+	auto cfgLog		= config.getValue<std::string>("rivetLog", ".\\rivet.log");
+	auto cfgTarget	= config.getValue<std::string>("rivetTarget", ".\\rivet.dll");
 
-	auto enable = cli.getValue<bool>("rivet-enable", cfgEnable);
-	auto log = cli.getValue<std::string>("rivet-log", cfgLog);
-	auto target = cli.getValue<std::string>("rivet-target", cfgTarget);
+	auto enable = cli.getValue<bool>("rivetEnable", cfgEnable);
+	auto log	= cli.getValue<std::string>("rivetLog", cfgLog);
+	auto target = cli.getValue<std::string>("rivetTarget", cfgTarget);
 
-	auto save = cli.getValue<bool>("rivet-save-config", false);
+	auto save = cli.getValue<bool>("rivetSaveConfig", false);
 	if (save) {
-		config.setValue("rivet-enable", enable ? "true" : "false");
-		config.setValue("rivet-log", log);
-		config.setValue("rivet-target", target);
+		config.setValue("rivetEnable", enable ? "true" : "false");
+		config.setValue("rivetLog", log);
+		config.setValue("rivetTarget", target);
 	}
 
 	Rivet::Compat::InitializeFunctionPointers();
