@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  SOLUTION_FILE_PATH: Rivet.sln
+  BUILD_CONFIGURATION: Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: aafb8b71554a4590aa5108bdb5005d81d72db6c1
+
+      - name: Integrate vcpkg with MSBuild
+        shell: pwsh
+        run: vcpkg integrate install
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build solution (x64 Release)
+        working-directory: ${{ github.workspace }}
+        run: |
+          msbuild `
+            $env:SOLUTION_FILE_PATH `
+            /m `
+            /p:Configuration=$env:BUILD_CONFIGURATION `
+            /p:Platform=x64
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rivet-${{ env.BUILD_CONFIGURATION }}-${{ github.run_number }}
+          path: |
+            x64\${{ env.BUILD_CONFIGURATION }}\
+          if-no-files-found: error
