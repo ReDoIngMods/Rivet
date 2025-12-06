@@ -1,34 +1,38 @@
 #pragma once
 
-#include "doorstop.h"
+#include "includes.h"
 
 namespace Rivet {
     class Config {
     public:
-		Config(std::wstring_view configPath = L".\\RivetDoorstop.ini") : configPath_(configPath) {
+		Config(std::wstring_view section, std::wstring_view configPath = L".\\Rivet.ini") : configPath_(configPath), section_(section) {
             if (!fs::exists(configPath_)) {
-                WritePrivateProfileStringW(L"RivetDoorstop", nullptr, nullptr, configPath_.data()); // Create empty file
-				WritePrivateProfileStringW(L"RivetDoorstop", L"rivetEnable", L"false", configPath_.data()); // don't enable by default
-                WritePrivateProfileStringW(L"RivetDoorstop", L"rivetLog", L"rivet.log", configPath_.data());
-                WritePrivateProfileStringW(L"RivetDoorstop", L"rivetTarget", L"rivet.dll", configPath_.data());
-				WritePrivateProfileStringW(L"RivetDoorstop", L"rivetHideConsole", L"false", configPath_.data());
+                // Create default doorstop config
+                WritePrivateProfileStringW(L"Doorstop", nullptr, nullptr, configPath_.data());
+				WritePrivateProfileStringW(L"Doorstop", L"enable", L"false", configPath_.data());
+                WritePrivateProfileStringW(L"Doorstop", L"log", L"rivet.log", configPath_.data());
+                WritePrivateProfileStringW(L"Doorstop", L"target", L"rivet.dll", configPath_.data());
+				WritePrivateProfileStringW(L"Doorstop", L"hideConsole", L"false", configPath_.data());
+
+				// Create default loader config
+				WritePrivateProfileStringW(L"Loader", L"directory", L"Mods", configPath_.data());
 			}
         }
 
         void setValue(const std::string& key, const std::string& value) {
-            WritePrivateProfileStringW(L"RivetDoorstop", utf8ToUtf16(key).data(), utf8ToUtf16(value).data(), configPath_.data());
+            WritePrivateProfileStringW(section_.data(), utf8ToUtf16(key).data(), utf8ToUtf16(value).data(), configPath_.data());
 		}
 
         std::string getValue(const std::string& key, const std::string& defaultValue) {
             wchar_t buffer[128];
-			DWORD charsRead = GetPrivateProfileStringW(L"RivetDoorstop", utf8ToUtf16(key).data(), utf8ToUtf16(defaultValue).data(), buffer, sizeof(buffer) / sizeof(wchar_t), configPath_.data());
+			DWORD charsRead = GetPrivateProfileStringW(section_.data(), utf8ToUtf16(key).data(), utf8ToUtf16(defaultValue).data(), buffer, sizeof(buffer) / sizeof(wchar_t), configPath_.data());
 			return utf16ToUtf8(std::wstring(buffer, charsRead));
 		}
 
         template <StringOrBool T>
         T getValue(const std::string& key, const T& defaultValue) {
             wchar_t buffer[256];
-            DWORD charsRead = GetPrivateProfileStringW(L"RivetDoorstop", utf8ToUtf16(key).data(), nullptr, buffer, sizeof(buffer) / sizeof(wchar_t), configPath_.data());
+            DWORD charsRead = GetPrivateProfileStringW(section_.data(), utf8ToUtf16(key).data(), nullptr, buffer, sizeof(buffer) / sizeof(wchar_t), configPath_.data());
             if (charsRead == 0) {
                 return defaultValue;
             }
@@ -51,6 +55,7 @@ namespace Rivet {
 
     private:
         std::wstring_view configPath_;
+		std::wstring section_;
 
         std::wstring utf8ToUtf16(const std::string& str) {
             if (str.empty()) return {};
