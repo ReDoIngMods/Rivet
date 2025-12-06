@@ -14,7 +14,7 @@ You can imagine this like [Unity Doorstop](https://github.com/NeighTools/UnityDo
 
 - [x] Basic hijacking
 - [x] Basic loading of DLL based on CLI args/config flags
-- [ ] Pre contraption init hijacking
+- [x] Pre contraption init hijacking
 - [ ] Debugging utilities
 
 ## Rivet common

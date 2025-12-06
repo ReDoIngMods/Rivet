@@ -18,21 +18,18 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	if (fdwReason != DLL_PROCESS_ATTACH)
 		return TRUE;
 
-
-	// -rivet-log <file> | Enable logging to <file>
-	// -rivet-target <path> | Set the target directory for dll (default: ./rivet.dll)
-	// -rivet-save-config | Save the current config (with modified values) to RivetDoorstop.ini
-
 	Rivet::Config config;
 	Rivet::CLI cli;
 
-	auto cfgEnable	= config.getValue<bool>("rivetEnable", false);
-	auto cfgLog		= config.getValue<std::string>("rivetLog", ".\\rivet.log");
-	auto cfgTarget	= config.getValue<std::string>("rivetTarget", ".\\rivet.dll");
+	auto cfgEnable		= config.getValue<bool>("rivetEnable", false);
+	auto cfgLog			= config.getValue<std::string>("rivetLog", ".\\rivet.log");
+	auto cfgTarget		= config.getValue<std::string>("rivetTarget", ".\\rivet.dll");
+	auto cfgHideConsole = config.getValue<bool>("rivetHideConsole", false);
 
-	auto enable = cli.getValue<bool>("rivetEnable", cfgEnable);
-	auto log	= cli.getValue<std::string>("rivetLog", cfgLog);
-	auto target = cli.getValue<std::string>("rivetTarget", cfgTarget);
+	auto enable			= cli.getValue<bool>("rivetEnable", cfgEnable);
+	auto log			= cli.getValue<std::string>("rivetLog", cfgLog);
+	auto target			= cli.getValue<std::string>("rivetTarget", cfgTarget);
+	auto hideConsole	= cli.getValue<bool>("rivetHideConsole", cfgHideConsole);
 
 	auto save = cli.getValue<bool>("rivetSaveConfig", false);
 	if (save) {
@@ -41,11 +38,16 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 		config.setValue("rivetTarget", target);
 	}
 
-	Rivet::Logger logger(log);
+	Rivet::Logger logger(log, !hideConsole);
 	Rivet::Logger::Info("Rivet Doorstop starting...");
 
-	Rivet::Compat::InitializeFunctionPointers();
+	Rivet::Compat::Initialize();
+
 	Rivet::Logger::Info("Rivet Doorstop initialized.");
+
+	for (auto& [key, value] : cli.getAllArgs()) {
+		Rivet::Logger::Debug("CLI Arg: -%s=%s", key.c_str(), value.c_str());
+	}
 
 	if (enable) {
 		// Resolve to full path

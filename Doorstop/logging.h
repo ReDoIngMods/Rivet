@@ -18,14 +18,18 @@ enum class LogLevel {
 
 class Logger {
 public:
-    Logger(std::string_view logPath) {
+	Logger(std::string_view logPath, bool useConsole = true) {
+		useConsole_ = useConsole;
+
         // Open file
         logFile_ = fopen(logPath.data(), "a");
 
         // Allocate console
-        allocatedConsole_ = AllocConsole();
-        freopen_s(&consoleOut_, "CONOUT$", "w", stdout);
-        freopen_s(&consoleErr_, "CONOUT$", "w", stderr);
+        if (useConsole_) {
+            AllocConsole();
+            freopen_s(&consoleOut_, "CONOUT$", "w", stdout);
+            freopen_s(&consoleErr_, "CONOUT$", "w", stderr);
+        }
 
         hConsole_ = GetStdHandle(STD_OUTPUT_HANDLE);
     }
@@ -45,9 +49,6 @@ public:
             fclose(consoleErr_);
             consoleErr_ = nullptr;
         }
-
-        if (allocatedConsole_)
-            FreeConsole();
     }
 
     static void LogVarArgs(LogLevel level, const char* format, va_list args) {
@@ -81,7 +82,7 @@ public:
             fflush(logFile_);
         }
         // Write to console
-        if (hConsole_) {
+		if (hConsole_) {
             SetConsoleTextAttribute(hConsole_, color);
             fprintf(stdout, "[%s] %s\n", levelStr, buffer);
             SetConsoleTextAttribute(hConsole_, 7); // Reset
@@ -129,7 +130,7 @@ private:
     static inline FILE* consoleErr_ = nullptr;
     static inline HANDLE hConsole_ = nullptr;
     static inline std::mutex mutex_;
-	static inline bool allocatedConsole_ = false;
+	static inline bool useConsole_ = true;
 };
 
 } // namespace Rivet
