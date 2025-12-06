@@ -11,6 +11,7 @@ namespace Rivet {
 				WritePrivateProfileStringW(L"RivetDoorstop", L"rivetEnable", L"false", configPath_.data()); // don't enable by default
                 WritePrivateProfileStringW(L"RivetDoorstop", L"rivetLog", L"rivet.log", configPath_.data());
                 WritePrivateProfileStringW(L"RivetDoorstop", L"rivetTarget", L"rivet.dll", configPath_.data());
+				WritePrivateProfileStringW(L"RivetDoorstop", L"rivetHideConsole", L"false", configPath_.data());
 			}
         }
 

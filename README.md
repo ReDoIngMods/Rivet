@@ -5,6 +5,9 @@ Rivet is a mod loader for Scrap Mechanic.
 > [!WARNING]
 > Currently under heavy development, not ready for real use.
 
+> [!NOTE]
+> Please refer to the [Installation Guide](./docs/installation.md) to set up Rivet for Scrap Mechanic. There is also an [Overview](./docs/overview.md) document that explains how Rivet works.
+
 ## Rivet Doorstop
 
 Doorstop is the basic tool to get a DLL loaded into the game as soon as possible, this is achieved by DLL hijacking.

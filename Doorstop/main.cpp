@@ -22,8 +22,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	Rivet::CLI cli;
 
 	auto cfgEnable		= config.getValue<bool>("rivetEnable", false);
-	auto cfgLog			= config.getValue<std::string>("rivetLog", ".\\rivet.log");
-	auto cfgTarget		= config.getValue<std::string>("rivetTarget", ".\\rivet.dll");
+	auto cfgLog			= config.getValue<std::string>("rivetLog", "rivet.log");
+	auto cfgTarget		= config.getValue<std::string>("rivetTarget", "rivet.dll");
 	auto cfgHideConsole = config.getValue<bool>("rivetHideConsole", false);
 
 	auto enable			= cli.getValue<bool>("rivetEnable", cfgEnable);
