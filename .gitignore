@@ -2,3 +2,4 @@ x64
 .vs
 *.vcxproj.*
 RivetDoorstop.ini
+vcpkg_installed

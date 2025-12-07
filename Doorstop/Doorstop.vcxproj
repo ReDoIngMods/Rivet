@@ -95,7 +95,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)version$(TargetExt)</OutputFile>
       <ModuleDefinitionFile>proxy.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -113,7 +113,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)version$(TargetExt)</OutputFile>
       <ModuleDefinitionFile>proxy.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -129,7 +129,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)version$(TargetExt)</OutputFile>
       <ModuleDefinitionFile>proxy.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -147,7 +147,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)version$(TargetExt)</OutputFile>
       <ModuleDefinitionFile>proxy.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>

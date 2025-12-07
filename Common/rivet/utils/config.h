@@ -11,7 +11,7 @@ namespace Rivet {
                 WritePrivateProfileStringW(L"Doorstop", nullptr, nullptr, configPath_.data());
 				WritePrivateProfileStringW(L"Doorstop", L"enable", L"false", configPath_.data());
                 WritePrivateProfileStringW(L"Doorstop", L"log", L"rivet.log", configPath_.data());
-                WritePrivateProfileStringW(L"Doorstop", L"target", L"rivet.dll", configPath_.data());
+                WritePrivateProfileStringW(L"Doorstop", L"target", L"RivetLoader.dll", configPath_.data());
 				WritePrivateProfileStringW(L"Doorstop", L"hideConsole", L"false", configPath_.data());
 
 				// Create default loader config

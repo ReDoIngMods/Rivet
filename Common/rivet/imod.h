@@ -6,7 +6,7 @@ namespace Rivet {
 		virtual ~IMod() = default;
 
 		// Rivet is the modding framework
-		public virtual void onRivetInitialize() {}
+		virtual void onRivetInitialize() {}
 		// Rivet is the modding framework
 		virtual void onRivetShutdown() {}
 

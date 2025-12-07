@@ -1,21 +1,12 @@
-"""
-Script to generate a changeloig for Rivet.
-
-It requires gitpython to be installed:
-    pip install gitpython
-
-This is possible since Rivet uses git and conventional commits for commit messages.
-"""
+# pip install gitpython
 
 from git import Repo
 
 def generate_changelog(repo_path: str) -> str:
     repo = Repo(repo_path)
     
-    # Get all tags sorted by version
     tags = sorted(repo.tags, key=lambda t: t.commit.committed_date, reverse=True)
     
-    # Get commits since the last tag, or all commits if no tags exist
     if tags:
         from_tag = tags[0].name
         commits = list(repo.iter_commits(f'{from_tag}..HEAD'))
@@ -32,9 +23,7 @@ def generate_changelog(repo_path: str) -> str:
     others = []
 
     for commit in commits:
-        # Get only the first line of the commit message (subject)
         message = commit.message.strip().split('\n')[0]
-        # Extract just the commit subject (up to first double newline or end)
         subject = message.split('\n\n')[0].strip()
         
         if subject.startswith("feat:"):

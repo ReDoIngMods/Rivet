@@ -1,7 +1,7 @@
 /// Rivet Doorstop is a native code injection library for Scrap Mechanic.
 
-#include "utils/flags.h"
-#include "utils/logging.h"
+#include "rivet/utils/flags.h"
+#include "rivet/utils/logging.h"
 
 #include "compat.h"
 
