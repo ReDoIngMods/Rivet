@@ -1,7 +1,8 @@
-#include "rivet/utils/includes.h"
+#include "includes.h"
 
-#include "rivet/utils/flags.h"
-#include "rivet/moddef.h"
+#include "flags.h"
+
+#include <rivet/moddef.h>
 
 #include "state.h"
 

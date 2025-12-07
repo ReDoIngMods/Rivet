@@ -155,9 +155,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="compat.h" />
-  </ItemGroup>
-  <ItemGroup>
     <MASM Include="proxy.asm">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Makefile</FileType>
@@ -168,6 +165,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="proxy.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\cli.h" />
+    <ClInclude Include="..\Common\config.h" />
+    <ClInclude Include="..\Common\flags.h" />
+    <ClInclude Include="..\Common\includes.h" />
+    <ClInclude Include="..\Common\logging.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

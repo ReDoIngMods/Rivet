@@ -1,6 +1,6 @@
 #pragma once
 
-#include <rivet/utils/includes.h>
+#include <includes.h>
 
 #include <rivet/moddef.h>
 
