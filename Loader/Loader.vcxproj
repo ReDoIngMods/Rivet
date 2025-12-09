@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="console.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,8 +172,13 @@
     <ClInclude Include="..\Common\config.h" />
     <ClInclude Include="..\Common\flags.h" />
     <ClInclude Include="..\Common\includes.h" />
-    <ClInclude Include="..\Common\logging.h" />
+    <ClInclude Include="console.h" />
     <ClInclude Include="state.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Doorstop\Doorstop.vcxproj">
+      <Project>{adc9313d-d3da-4795-b621-8357689176c0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,9 @@
 /// Rivet Doorstop is a native code injection library for Scrap Mechanic.
 
 #include "flags.h"
-#include "logging.h"
+#include "console.h"
+
+#include "loggerManager.h"
 
 #include "compat.h"
 
@@ -12,42 +14,31 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	Rivet::Flags genericFlags = Rivet::Flags::GetFlags();
 	Rivet::DoorstopFlags& flags = genericFlags.doorstop;
 
-	Rivet::Logger logger(flags.log, !flags.hideConsole);
-	Rivet::Logger::Info("Rivet Doorstop starting...");
-
+	CONSOLE_INFO("Rivet Doorstop starting...");
 	Rivet::Compat::Initialize();
 
-	Rivet::Logger::Info("Rivet Doorstop initialized.");
+	CONSOLE_INFO("Rivet Doorstop initialized.");
 
-	if (flags.enable) {
-		MessageBoxA(nullptr, "Rivet Doorstop is enabled. The target DLL will be loaded.", "Rivet Doorstop", MB_OK);
+	if (!flags.enable)
+		return TRUE;
 
-		// Resolve to full path
-		char fullTarget[MAX_PATH];
-		GetFullPathNameA(flags.target.c_str(), MAX_PATH, fullTarget, nullptr);
-		Rivet::Logger::Info("Loading target DLL: %s", fullTarget);
+	MessageBoxA(nullptr, "Rivet Doorstop is enabled. The target DLL will be loaded.", "Rivet Doorstop", MB_OK);
 
-		HMODULE hTarget = LoadLibraryA(fullTarget);
-		if (!hTarget) {
-			Rivet::Logger::Error("Failed to load target DLL: %s", fullTarget);
+	// Resolve to full path
+	char fullTarget[MAX_PATH];
+	GetFullPathNameA(flags.target.c_str(), MAX_PATH, fullTarget, nullptr);
+	CONSOLE_INFO("Loading target DLL: %s", fullTarget);
 
-			DWORD error = GetLastError();
-			LPSTR errorMsg = nullptr;
-			FormatMessageA(
-				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-				nullptr,
-				error,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-				(LPSTR)&errorMsg,
-				0,
-				nullptr
-			);
-			if (errorMsg) {
-				Rivet::Logger::Error("Error %d: %s", error, errorMsg);
-				LocalFree(errorMsg);
-			}
+	if (!LoadLibraryA(fullTarget)) {
+		CONSOLE_ERROR("Failed to load target DLL: %s", fullTarget);
 
-			return TRUE;
+		DWORD error = GetLastError();
+		LPSTR errorMsg = nullptr;
+		FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPSTR>(&errorMsg), 0, nullptr);
+
+		if (errorMsg) {
+			CONSOLE_ERROR("Error %d: %s", error, errorMsg);
+			LocalFree(errorMsg);
 		}
 	}
 

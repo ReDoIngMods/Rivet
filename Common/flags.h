@@ -4,7 +4,6 @@
 
 #include "cli.h"
 #include "config.h"
-#include "logging.h"
 
 namespace Rivet {
 	struct DoorstopFlags {

@@ -152,8 +152,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rivet\imod.h" />
+    <ClInclude Include="rivet\logging.h" />
     <ClInclude Include="rivet\moddef.h" />
     <ClInclude Include="rivet\modding.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Doorstop\Doorstop.vcxproj">
+      <Project>{adc9313d-d3da-4795-b621-8357689176c0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
