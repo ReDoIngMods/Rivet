@@ -59,3 +59,4 @@ jobs:
           name: rivet-${{ env.BUILD_CONFIGURATION }}-${{ github.run_number }}
           path: ${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}\RivetPack.zip
           if-no-files-found: error
+          compression-level: 0
