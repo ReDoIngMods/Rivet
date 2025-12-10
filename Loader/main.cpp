@@ -22,6 +22,12 @@ bool getRivetEnabled(HMODULE hMod, Rivet::ModDef& outModDef) {
 }
 
 static void handleMod(fs::path modPath) {
+	// Check if file ends in .old, if it does, it's been disabled and we skip it
+	if (modPath.extension() == ".old") {
+		CONSOLE_INFO("Mod %s is disabled (ends with .old), skipping.", modPath.filename().string());
+		return;
+	}
+
 	HMODULE hMod = LoadLibraryA(modPath.string().c_str());
 	if (!hMod) {
 		CONSOLE_ERROR("Failed to load mod DLL: %s", modPath.string().c_str());
