@@ -7,7 +7,7 @@
 namespace Rivet {
 	class LoaderState {
 	public:
-		static LoaderState& getInstance() {
+		static LoaderState& GetInstance() {
 			static LoaderState instance;
 			return instance;
 		}

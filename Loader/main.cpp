@@ -8,7 +8,7 @@
 
 #include <MinHook.h>
 
-static Rivet::LoaderState& loaderState = Rivet::LoaderState::getInstance();
+static Rivet::LoaderState& loaderState = Rivet::LoaderState::GetInstance();
 
 bool getRivetEnabled(HMODULE hMod, Rivet::ModDef& outModDef) {
 	// Look for `GET_RIVET_MOD_DEF` export
@@ -37,7 +37,7 @@ static void handleMod(fs::path modPath) {
 	Rivet::IMod* modInstance = modDef.create();
 	CONSOLE_INFO("Loaded mod: %s by %s", modDef.getName(), modDef.getAuthor());
 
-	Rivet::LoaderState::getInstance().addMod(modDef);
+	Rivet::LoaderState::GetInstance().addMod(modDef);
 }
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {

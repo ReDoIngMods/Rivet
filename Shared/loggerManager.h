@@ -30,13 +30,13 @@ namespace Rivet {
 		LoggerManager();
 		~LoggerManager();
 
-		LOGGERMANAGER_API static LoggerManager& getInstance() {
+		LOGGERMANAGER_API static LoggerManager& GetInstance() {
 			static LoggerManager instance;
 			return instance;
 		}
 
-		LOGGERMANAGER_API Rivet::Logger* getLogger(const std::string_view& name);
+		LOGGERMANAGER_API Rivet::Logger* getLogger(std::string_view name);
 
-		void sendRawLog(LogLevel logLevel, const std::string_view& loggerName, const std::string_view& format, va_list arguments);
+		void sendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments);
 	};
 }

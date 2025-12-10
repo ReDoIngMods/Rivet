@@ -83,7 +83,7 @@ Rivet::LoggerManager::~LoggerManager() {
     }
 }
 
-Rivet::Logger* Rivet::LoggerManager::getLogger(const std::string_view& name) {
+Rivet::Logger* Rivet::LoggerManager::getLogger(std::string_view name) {
 	const auto& iterator = loggers_.find(name);
 	if (iterator == loggers_.end()) {
 		Logger* logger = new Logger(name);
@@ -95,7 +95,7 @@ Rivet::Logger* Rivet::LoggerManager::getLogger(const std::string_view& name) {
 	return iterator->second;
 }
 
-void Rivet::LoggerManager::sendRawLog(LogLevel logLevel, const std::string_view& loggerName, const std::string_view& format, va_list arguments) {
+void Rivet::LoggerManager::sendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments) {
 	const char* levelStr = nullptr;
     ConsoleColor color = ConsoleColor::White;
 
