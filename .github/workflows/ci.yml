@@ -16,7 +16,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13' 
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
@@ -39,10 +44,18 @@ jobs:
             /p:Configuration=$env:BUILD_CONFIGURATION `
             /p:Platform=x64
 
-      - name: Upload build artifacts
+      # Script at Scripts/CreatePackage.py creates the RivetPack.zip file in the build output directory
+      - name: Run packaging script
+        working-directory: ${{ github.workspace }}
+        run: |
+          python .\Scripts\CreatePackage.py
+        env:
+          BUILD_DIR: ${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}
+          DATA_DIR: ${{ github.workspace }}\data
+
+      - name: Upload Rivet package artifact
         uses: actions/upload-artifact@v4
         with:
           name: rivet-${{ env.BUILD_CONFIGURATION }}-${{ github.run_number }}
-          path: |
-            x64\${{ env.BUILD_CONFIGURATION }}\
+          path: ${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}\RivetPack.zip
           if-no-files-found: error
