@@ -3,16 +3,16 @@
 using namespace Rivet;
 
 Config::Config(std::wstring_view section, std::wstring_view configPath) : configPath_(configPath), section_(section) {
-	if (!fs::exists(configPath_)) {
+	if (!fs::exists(configPath_) || fs::file_size(configPath_) == 0) {
 		// Create default doorstop config
 		WritePrivateProfileStringW(L"Doorstop", nullptr, nullptr, configPath_.data());
 		WritePrivateProfileStringW(L"Doorstop", L"enable", L"false", configPath_.data());
-		WritePrivateProfileStringW(L"Doorstop", L"log", L"rivet.log", configPath_.data());
-		WritePrivateProfileStringW(L"Doorstop", L"target", L"RivetLoader.dll", configPath_.data());
+		WritePrivateProfileStringW(L"Doorstop", L"log", L"Rivet/latest.log", configPath_.data());
+		WritePrivateProfileStringW(L"Doorstop", L"target", L"Rivet/Loader.dll", configPath_.data());
 		WritePrivateProfileStringW(L"Doorstop", L"hideConsole", L"false", configPath_.data());
 
 		// Create default loader config
-		WritePrivateProfileStringW(L"Loader", L"directory", L"Mods", configPath_.data());
+		WritePrivateProfileStringW(L"Loader", L"directory", L"Rivet/Mods", configPath_.data());
 	}
 }
 
