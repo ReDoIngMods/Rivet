@@ -51,11 +51,11 @@ inline static bool FormatBuffer(Rivet::LoggerManager::Buffer& buffer, const std:
 }
 
 Rivet::LoggerManager::LoggerManager() {
-    this->formatBuffer_.size = 0xFF + 1;
-    this->formatBuffer_.buffer = new char[this->formatBuffer_.size];
+    formatBuffer_.size = 0xFF + 1;
+    formatBuffer_.buffer = new char[formatBuffer_.size];
 
-    this->logBuffer_.size = 0xFF + 1;
-    this->logBuffer_.buffer = new char[this->logBuffer_.size];
+    logBuffer_.size = 0xFF + 1;
+    logBuffer_.buffer = new char[logBuffer_.size];
 
     Rivet::Flags genericFlags = Rivet::Flags::GetFlags();
     Rivet::DoorstopFlags& flags = genericFlags.doorstop;
@@ -65,10 +65,18 @@ Rivet::LoggerManager::LoggerManager() {
 		SetConsoleTitle(L"Debug Console");
 		SetConsoleCP(CP_UTF8);
 
-		this->hStdOut_ = GetStdHandle(STD_OUTPUT_HANDLE);
+		hStdOut_ = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
+
+	// Open log file if specified
+    if (!flags.log.empty()) {
+        hFileOut_ = CreateFileA(flags.log.c_str(), GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (hFileOut_ != INVALID_HANDLE_VALUE) {
+            SetFilePointer(hFileOut_, 0, nullptr, FILE_END);
+		}
+    }
     
-    this->sendRawLog(Rivet::LogLevel::Info, "LoggerManager", "Initialized Console!", nullptr);
+    sendRawLog(Rivet::LogLevel::Info, "LoggerManager", "Initialized Console!", nullptr);
 }
 
 Rivet::LoggerManager::~LoggerManager() { 
@@ -125,13 +133,18 @@ void Rivet::LoggerManager::sendRawLog(LogLevel logLevel, std::string_view logger
 
     constexpr const char* logFormat = "%02d:%02d:%02d %s %s%s\n";
 
-	std::lock_guard<std::mutex> lock(this->consoleMutex_);
+	std::lock_guard<std::mutex> lock(consoleMutex_);
 
     VFormatBuffer(formatBuffer_, format, arguments);
     FormatBuffer(logBuffer_, logFormat, curTime.tm_hour, curTime.tm_min, curTime.tm_sec, loggerName.data(), levelStr, formatBuffer_.buffer);
     
-    SetConsoleTextAttribute(this->hStdOut_, static_cast<WORD>(color));
+    SetConsoleTextAttribute(hStdOut_, static_cast<WORD>(color));
 
     DWORD written = 0;
     WriteConsoleA(hStdOut_, logBuffer_.buffer, static_cast<DWORD>(strlen(logBuffer_.buffer)), &written, nullptr);
+
+    if (hFileOut_ != INVALID_HANDLE_VALUE) {
+        DWORD bytesWritten = 0;
+        WriteFile(hFileOut_, logBuffer_.buffer, static_cast<DWORD>(strlen(logBuffer_.buffer)), &bytesWritten, nullptr);
+	}
 }
