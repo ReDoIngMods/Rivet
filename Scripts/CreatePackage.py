@@ -45,10 +45,10 @@ def create_package_bytes() -> bytes:
     │
     └───RivetPack
         │   version.dll
+        │   Rivet.ini
         │
         └───Rivet
             │   Loader.dll
-            │   Rivet.ini
             │   Rivet.log
             │
             └───Mods
@@ -69,15 +69,15 @@ def create_package_bytes() -> bytes:
         for data_file in data_dir.iterdir():
             package.writestr(data_file.name, load_file_bytes(data_file))
         
-        # Add version.dll
+        # Add root linkable files
         package.writestr("RivetPack/version.dll", version_data)
+        package.writestr("RivetPack/Rivet.ini", b"")
 
         # Add RivetPack/Rivet/Loader.dll
         package.writestr("RivetPack/Rivet/Loader.dll", rivet_loader_data)
 
         # Add dummy files Rivet.ini, Rivet.log, and Mods/ directory
         package.writestr("RivetPack/Rivet/Mods/", b"")
-        package.writestr("RivetPack/Rivet/Rivet.ini", b"")
         package.writestr("RivetPack/Rivet/Rivet.log", b"")
 
     return rivet_package_data.getvalue()
