@@ -39,6 +39,9 @@ void Compat::InitializeFunctionPointers() {
 	wchar_t versionDllPath[MAX_PATH];
 	wcscpy_s(versionDllPath, systemDirectory);
 
+	size_t len = wcslen(versionDllPath);
+	if (len > 0 && versionDllPath[len - 1] != L'\\')
+
 	wcscat_s(versionDllPath, L"\\");
 	wcscat_s(versionDllPath, TEXT(TARGET_NAME));
 
