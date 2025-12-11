@@ -121,7 +121,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TARGET_NAME="$(TargetName).dll";DOORSTOP_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_NAME="$(TargetName).dll";RIVET_DOORSTOP_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Shared</AdditionalIncludeDirectories>
@@ -140,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TARGET_NAME="$(TargetName).dll";DOORSTOP_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_NAME="$(TargetName).dll";RIVET_DOORSTOP_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Shared</AdditionalIncludeDirectories>
@@ -156,6 +156,8 @@
   <ItemGroup>
     <ClCompile Include="compat.cpp" />
     <ClCompile Include="console.cpp" />
+    <ClCompile Include="logger.cpp" />
+    <ClCompile Include="loggerManager.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +175,8 @@
   <ItemGroup>
     <ClInclude Include="compat.h" />
     <ClInclude Include="console.h" />
+    <ClInclude Include="logger.h" />
+    <ClInclude Include="loggerManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.vcxproj">

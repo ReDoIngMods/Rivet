@@ -2,6 +2,8 @@
 #include "includes.h"
 #include <cstdarg>
 
+#include "sharedmacros.h"
+
 namespace Rivet {
 	enum class LogLevel {
 		Info,
@@ -17,9 +19,9 @@ namespace Rivet {
 	public:
 		Logger(const std::string_view& name);
 
-		virtual void info(const std::string_view format, ...);
-		virtual void warn(const std::string_view format, ...);
-		virtual void error(const std::string_view format, ...);
-		virtual void debug(const std::string_view format, ...);
+		RIVET_DOORSTOP_API void info(const std::string_view format, ...);
+		RIVET_DOORSTOP_API void warn(const std::string_view format, ...);
+		RIVET_DOORSTOP_API void error(const std::string_view format, ...);
+		RIVET_DOORSTOP_API void debug(const std::string_view format, ...);
 	};
 }

@@ -3,11 +3,7 @@
 #include "logger.h"
 #include <mutex>
 
-#if DOORSTOP_EXPORTS
-#define LOGGERMANAGER_API __declspec(dllexport)
-#else
-#define LOGGERMANAGER_API __declspec(dllimport)
-#endif
+#include "sharedmacros.h"
 
 namespace Rivet {
 	class LoggerManager {
@@ -15,12 +11,12 @@ namespace Rivet {
 		LoggerManager();
 		~LoggerManager();
 
-		LOGGERMANAGER_API static LoggerManager& GetInstance() {
+		RIVET_DOORSTOP_API static Rivet::LoggerManager& GetInstance() {
 			static LoggerManager instance;
 			return instance;
 		}
 
-		LOGGERMANAGER_API Rivet::Logger* getLogger(std::string_view name);
+		RIVET_DOORSTOP_API Rivet::Logger* getLogger(std::string_view name);
 
 		void sendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments);
 
