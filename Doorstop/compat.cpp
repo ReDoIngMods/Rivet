@@ -33,16 +33,21 @@ extern "C" {
 }
 
 void Compat::InitializeFunctionPointers() {
-	wchar_t sysPathW[MAX_PATH];
-	GetSystemDirectoryW(sysPathW, MAX_PATH);
-	std::filesystem::path sysPathP = sysPathW;
-	sysPathP /= TARGET_NAME;
-	LPCWSTR sysPath = sysPathP.c_str();
+	wchar_t systemDirectory[MAX_PATH];
+	GetSystemDirectory(systemDirectory, MAX_PATH);
 
-	HMODULE hModule = LoadLibraryW(sysPath); // Load the real DLL
-	if (!hModule) {
+	wchar_t versionDllPath[MAX_PATH];
+	wcscpy_s(versionDllPath, systemDirectory);
+
+	size_t len = wcslen(versionDllPath);
+	if (len > 0 && versionDllPath[len - 1] != L'\\')
+
+	wcscat_s(versionDllPath, L"\\");
+	wcscat_s(versionDllPath, TEXT(TARGET_NAME));
+
+	HMODULE hModule = LoadLibraryW(versionDllPath); // Load the real DLL
+	if (!hModule)
 		return;
-	}
 
 	GET_REAL_FUNC_PTR(GetFileVersionInfoW);
 	GET_REAL_FUNC_PTR(GetFileVersionInfoA);
@@ -109,7 +114,7 @@ void Rivet::Compat::PatchAllocConsole() {
 	while (thunkILT->u1.AddressOfData != 0) {
 		IMAGE_IMPORT_BY_NAME* importByName = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(moduleBase + thunkILT->u1.AddressOfData);
 
-		if (strcmp((char*)importByName->Name, "AllocConsole") == 0)
+		if (strcmp(reinterpret_cast<const char*>(importByName->Name), "AllocConsole") == 0)
 			break; // Found it
 
 		++thunkILT;
