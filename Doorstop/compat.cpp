@@ -84,7 +84,79 @@ void Compat::PatchMyGUI() {
 	FlushInstructionCache(GetCurrentProcess(), pLogFunc, 1);
 }
 
+using AllocConsoleFunc = std::add_pointer_t<decltype(AllocConsole)>;
+AllocConsoleFunc oAllocConsole = nullptr;
+
+BOOL WINAPI hAllocConsole() {
+	oAllocConsole();
+	return TRUE;
+}
+
+
+void Rivet::Compat::PatchAllocConsole() {
+	// We dont want to use minhook just to patch AllocConsole, that doesn't make any sense!
+	//
+	// So we are going to do IAT hooking which means we are going to replace the address of AllocConsole
+	// in our process's import table with our own.
+
+	DWORD64 moduleBase = reinterpret_cast<DWORD64>(GetModuleHandle(NULL));
+	IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(moduleBase);
+	IMAGE_NT_HEADERS* ntHeaders = reinterpret_cast<IMAGE_NT_HEADERS*>(moduleBase + dosHeader->e_lfanew);
+
+	// We need to get the import descriptor to access all imported dlls.
+	IMAGE_DATA_DIRECTORY importDir = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+	if (importDir.VirtualAddress == 0)
+		return;
+
+	DWORD64 importVA = moduleBase + importDir.VirtualAddress;
+
+	IMAGE_IMPORT_DESCRIPTOR* importDesc = (IMAGE_IMPORT_DESCRIPTOR*)importVA;
+	IMAGE_IMPORT_DESCRIPTOR* current = importDesc;
+
+	// AllocConsole is inside Kernel32.dll, we need to find the dll in our descriptor.
+	while (current->Name != 0) {
+		LPCSTR dllName = reinterpret_cast<LPCSTR>(moduleBase + current->Name);
+		if (_stricmp(dllName, "KERNEL32.dll") == 0)
+			break; // Found it
+
+		++current;
+	}
+
+	if (current->Name == 0)
+		return;
+
+	// Now that we have our Kernel32.dll, we can just go through all thunk data's and find our function.
+	IMAGE_THUNK_DATA* thunkILT = reinterpret_cast<IMAGE_THUNK_DATA*>(moduleBase + current->OriginalFirstThunk);
+	IMAGE_THUNK_DATA* thunkIAT = reinterpret_cast<IMAGE_THUNK_DATA*>(moduleBase + current->FirstThunk);
+
+	while (thunkILT->u1.AddressOfData != 0) {
+		IMAGE_IMPORT_BY_NAME* importByName = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(moduleBase + thunkILT->u1.AddressOfData);
+
+		if (strcmp((char*)importByName->Name, "AllocConsole") == 0)
+			break; // Found it
+
+		++thunkILT;
+		++thunkIAT;
+	}
+
+	if (thunkILT->u1.AddressOfData == 0)
+		return;
+
+	// We now got the address where the game dereferences it to run AllocConsole. we can now
+	// overwrite this with our own making the game call our function.
+
+	DWORD oldProtect;
+	VirtualProtect(&thunkIAT->u1.Function, sizeof(LPVOID), PAGE_READWRITE, &oldProtect);
+
+	oAllocConsole = reinterpret_cast<AllocConsoleFunc>(thunkIAT->u1.Function);
+	thunkIAT->u1.Function = reinterpret_cast<ULONGLONG>(hAllocConsole);
+
+	VirtualProtect(&thunkIAT->u1.Function, sizeof(LPVOID), oldProtect, &oldProtect);
+	FlushInstructionCache(GetCurrentProcess(), nullptr, 0);
+}
+
 void Compat::Initialize() {
 	InitializeFunctionPointers();
 	PatchMyGUI();
+	PatchAllocConsole();
 }
