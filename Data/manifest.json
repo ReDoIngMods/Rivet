@@ -1,6 +1,6 @@
 {
     "name": "Rivet",
-    "version_number": "0.1.3",
+    "version_number": "0.1.4",
     "website_url": "https://github.com/ReDoIngMods/Rivet",
     "description": "A modding toolkit for Scrap Mechanic. It gives you a clean way to inject DLLs into the game process and to load mods in a structured, discoverable way.",
     "dependencies": []
