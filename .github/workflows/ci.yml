@@ -3,8 +3,18 @@ name: CI
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'LICENSE'
+      - 'README.md'
+      - '.gitignore'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'LICENSE'
+      - 'README.md'
+      - '.gitignore'
 
 env:
   SOLUTION_FILE_PATH: Rivet.sln
@@ -44,7 +54,7 @@ jobs:
             /p:Configuration=$env:BUILD_CONFIGURATION `
             /p:Platform=x64
 
-      # Script at Scripts/CreatePackage.py creates the RivetPack.zip file in the build output directory
+      # Script at Scripts/CreatePackage.py creates the RivetPack-{VERSION}.zip file in the build output directory
       - name: Run packaging script
         working-directory: ${{ github.workspace }}
         run: |
@@ -53,10 +63,22 @@ jobs:
           BUILD_DIR: ${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}
           DATA_DIR: ${{ github.workspace }}\data
 
+      - name: Extract version from manifest
+        id: get_version
+        run: |
+          $VERSION = (Get-Content -Path "${{ github.workspace }}\Data\manifest.json" | ConvertFrom-Json).version_number
+          echo "VERSION=$VERSION" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+
+      - name: Extract package for upload
+        run: |
+          $VERSION = "${{ steps.get_version.outputs.VERSION }}"
+          Expand-Archive -Path "${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}\RivetPack-$VERSION.zip" -DestinationPath "${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}\RivetPack-Extract"
+        shell: pwsh
+
       - name: Upload Rivet package artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rivet-${{ env.BUILD_CONFIGURATION }}-${{ github.run_number }}
-          path: ${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}\RivetPack.zip
+          name: RivetPack-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ github.workspace }}\x64\${{ env.BUILD_CONFIGURATION }}\RivetPack-Extract\*
           if-no-files-found: error
-          compression-level: 0

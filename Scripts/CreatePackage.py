@@ -11,15 +11,22 @@ from pathlib import Path
 import zipfile
 import io
 import os
+import json
 
 # Define build and data directories
 build_dir = Path(os.getenv("BUILD_DIR", "."))
 data_dir = Path(os.getenv("DATA_DIR", build_dir / "data"))
 
+# Read version from manifest.json
+manifest_path = data_dir / "manifest.json"
+with open(manifest_path, "r") as f:
+    manifest = json.load(f)
+    version = manifest["version_number"]
+
 # Define file paths
 rivet_loader_file = build_dir / "rivetLoader.dll"
 version_file = build_dir / "version.dll"
-output_file = build_dir / "RivetPack.zip"
+output_file = build_dir / f"RivetPack-{version}.zip"
 
 def load_file_bytes(file_path: Path) -> bytes:
     """
