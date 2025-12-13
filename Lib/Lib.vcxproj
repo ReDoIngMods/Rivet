@@ -146,13 +146,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rivet\memory\sigscanner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="rivet\macros.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="rivet\defines.h" />
     <ClInclude Include="rivet\imod.h" />
     <ClInclude Include="rivet\logging.h" />
+    <ClInclude Include="rivet\memory\sigscanner.h" />
     <ClInclude Include="rivet\moddef.h" />
     <ClInclude Include="rivet\modding.h" />
   </ItemGroup>
