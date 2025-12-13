@@ -41,8 +41,8 @@ void Compat::InitializeFunctionPointers() {
 
 	size_t len = wcslen(versionDllPath);
 	if (len > 0 && versionDllPath[len - 1] != L'\\')
+		wcscat_s(versionDllPath, L"\\");
 
-	wcscat_s(versionDllPath, L"\\");
 	wcscat_s(versionDllPath, TEXT(TARGET_NAME));
 
 	HMODULE hModule = LoadLibraryW(versionDllPath); // Load the real DLL
