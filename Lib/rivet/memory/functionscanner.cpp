@@ -28,6 +28,9 @@ RIVET_LIB_API const std::vector<Rivet::FunctionData> Rivet::FunctionScanner::get
 }
 
 void Rivet::FunctionScanner::Scan() {
+    if (GCache.contains(baseAddress_))
+        return;
+
     IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(baseAddress_);
     IMAGE_NT_HEADERS* ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(baseAddress_ + dosHeader->e_lfanew);
 
