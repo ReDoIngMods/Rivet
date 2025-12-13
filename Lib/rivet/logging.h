@@ -29,7 +29,7 @@ namespace Rivet {
 		LoggerManager(const LoggerManager&) = delete;
 		LoggerManager& operator=(const LoggerManager&) = delete;
 	public:
-		RIVET_LIB_API static LoggerManager& GetInstance();
-		RIVET_LIB_API Rivet::Logger* getLogger(const std::string_view& name);
+		RIVET_DOORSTOP_API static LoggerManager& GetInstance();
+		RIVET_DOORSTOP_API Rivet::Logger* getLogger(const std::string_view& name);
 	};
 }
