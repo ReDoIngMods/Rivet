@@ -15,8 +15,6 @@ namespace Rivet {
 	public:
 		RIVET_LIB_API ~FunctionScanner() = default;
 
-		RIVET_LIB_API explicit FunctionScanner(const wchar_t* moduleName);
-		RIVET_LIB_API explicit FunctionScanner(const char* moduleName);
 		RIVET_LIB_API explicit FunctionScanner(const std::wstring& moduleName);
 		RIVET_LIB_API explicit FunctionScanner(const std::string& moduleName);
 

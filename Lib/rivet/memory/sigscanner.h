@@ -16,8 +16,6 @@ namespace Rivet {
 	public:
 		~SignatureScanner() = default;
 
-		explicit RIVET_LIB_API SignatureScanner(const wchar_t* moduleName);
-		explicit RIVET_LIB_API SignatureScanner(const char* moduleName);
 		explicit RIVET_LIB_API SignatureScanner(const std::wstring& moduleName);
 		explicit RIVET_LIB_API SignatureScanner(const std::string& moduleName);
 

@@ -42,16 +42,6 @@ typedef struct _UNWIND_INFO
 	OPTIONAL ULONG ExceptionData[];
 } UNWIND_INFO, * PUNWIND_INFO;
 
-RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(const wchar_t* moduleName) {
-	InitFunctionScanner(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName)));
-	Scan();
-}
-
-RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(const char* moduleName) {
-	InitFunctionScanner(reinterpret_cast<DWORD64>(GetModuleHandleA(moduleName)));
-	Scan();
-}
-
 RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(const std::wstring& moduleName) {
 	InitFunctionScanner(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName.c_str())));
 	Scan();
@@ -95,9 +85,6 @@ void Rivet::FunctionScanner::Scan() {
 		DWORD64 begin  = baseAddress_ + func.BeginAddress;
 		DWORD64 end    = baseAddress_ + func.EndAddress;
 		DWORD64 unwind = baseAddress_ + func.UnwindData;
-
-		if (func.BeginAddress == 0x2D5AA0)
-			printf("");
 
 		auto* unwindInfo = reinterpret_cast<UNWIND_INFO*>(unwind);
 		if (unwindInfo->Flags & UNW_FLAG_CHAININFO) {

@@ -33,14 +33,6 @@ inline static void GetTextRange(const DWORD64 baseAddress, DWORD64& startAddress
 	}
 }
 
-RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const wchar_t* moduleName) {
-	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName)), addressStart_, addressEnd_);
-}
-
-RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const char* moduleName) {
-	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandleA(moduleName)), addressStart_, addressEnd_);
-}
-
 RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const std::wstring& moduleName) {
 	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName.c_str())), addressStart_, addressEnd_);
 }
