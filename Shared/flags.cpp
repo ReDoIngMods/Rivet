@@ -26,5 +26,9 @@ Flags Flags::GetFlags() {
 		loaderConfig.setValue("directory", flags.loader.directory);
 	}
 
+	if (!flags.doorstop.enable) {
+		flags.doorstop.hideConsole = true;
+	}
+
 	return flags;
 }

@@ -20,6 +20,7 @@ If you just want to get started, the [Installation Guide](./docs/installation.md
 
 This project would not exist without the help and feedback of many people.
 
+- [@VeraDev0](https://github.com/VeraDev0): For contributing to the repository and helping development
 - [@QuestionableM](https://github.com/QuestionableM): For helping with proxying knowledge (e.g. for prompting me to look into asm thunks for proxying DLL exports).
 - [@crackx02](https://github.com/crackx02): For helping debug various issues with the DLL loading process.
-- Everyone in the [ReDoIng Mods](https://github.com/ReDoIngMods) organization for ideas, testing, and general support.
+- Everyone in the [@ReDoIngMods](https://github.com/ReDoIngMods) organization for ideas, testing, and general support.
