@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "../defines.h"
 
@@ -21,7 +22,7 @@ namespace Rivet {
 		SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress);
 
 		template<SignatureType type>
-		DWORD64 ScanPattern(const std::string& pattern, DWORD64 offset = 0) {
+		DWORD64 scanPattern(const std::string& pattern, DWORD64 offset = 0, bool useCache = true, bool cacheResult = true) {
 			std::vector<uint8_t> bytes;
 			std::vector<uint8_t> mask;
 
@@ -32,12 +33,12 @@ namespace Rivet {
 				static_assert(false, "Unsupported SignatureType");
 			}
 
-			return ScanPatternRaw(bytes, mask, offset);
+			return scanPatternRaw(bytes, mask, offset, useCache, cacheResult);
 		}
 	private:
 		static bool ParseIDAStyle(const std::string& pattern, std::vector<uint8_t>& bytes, std::vector<uint8_t>& mask);
 
-		RIVET_LIB_API DWORD64 ScanPatternRaw(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask, DWORD64 offset);
+		RIVET_LIB_API DWORD64 scanPatternRaw(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask, DWORD64 offset, bool useCache, bool cacheResult);
 
 		DWORD64 addressStart_ = 0;
 		DWORD64 addressEnd_ = 0;

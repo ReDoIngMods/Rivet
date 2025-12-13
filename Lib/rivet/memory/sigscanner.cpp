@@ -64,7 +64,7 @@ bool Rivet::SignatureScanner::ParseIDAStyle(const std::string& pattern, std::vec
 	return true;
 }
 
-RIVET_LIB_API DWORD64 Rivet::SignatureScanner::ScanPatternRaw(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask, DWORD64 offset) {
+RIVET_LIB_API DWORD64 Rivet::SignatureScanner::scanPatternRaw(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask, DWORD64 offset, bool useCache, bool cacheResult) {
 	if (bytes.empty() || mask.empty() || bytes.size() != mask.size())
 		return 0;
 
