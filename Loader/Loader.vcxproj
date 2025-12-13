@@ -145,6 +145,15 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>where python &gt;nul 2&gt;nul
+if %ERRORLEVEL%==0 (
+    python "$(SolutionDir)copyDLL.py" "$(TargetPath)"
+) else (
+    echo Python not found, skipping copyDLL.py
+)
+exit /b 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -162,6 +171,15 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>where python &gt;nul 2&gt;nul
+if %ERRORLEVEL%==0 (
+    python "$(SolutionDir)copyDLL.py" "$(TargetPath)"
+) else (
+    echo Python not found, skipping copyDLL.py
+)
+exit /b 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="console.cpp" />
