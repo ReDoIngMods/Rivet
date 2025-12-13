@@ -1,6 +1,6 @@
 #pragma once
 #include "includes.h"
-#include "sharedmacros.h"
+#include "defines.h"
 #include <mutex>
 
 namespace Rivet {
@@ -30,6 +30,6 @@ namespace Rivet {
 		LoggerManager& operator=(const LoggerManager&) = delete;
 	public:
 		RIVET_DOORSTOP_API static LoggerManager& GetInstance();
-		RIVET_DOORSTOP_API Rivet::Logger* getLogger(const std::string_view& name);
+		RIVET_DOORSTOP_API Rivet::Logger* getLogger(std::string_view name);
 	};
 }

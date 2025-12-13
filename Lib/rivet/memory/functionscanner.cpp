@@ -1,62 +1,26 @@
 #include "functionscanner.hpp"
 #include <unordered_map>
-#include <winternl.h>
+#include <algorithm>
 
-#pragma warning(disable: 4200)
+#include <Zydis/Zydis.h>
 
 static std::unordered_map<DWORD64, std::vector<Rivet::FunctionData>> GCache;
 
-#define UNW_FLAG_NHANDLER       0x0
-#define UNW_FLAG_EHANDLER       0x1
-#define UNW_FLAG_UHANDLER       0x2
-#define UNW_FLAG_CHAININFO      0x4
-
-typedef unsigned char UBYTE;
-typedef unsigned short USHORT;
-
-typedef union _UNWIND_CODE
-{
-	struct
-	{
-		UBYTE CodeOffset;
-		UBYTE UnwindOp : 4;
-		UBYTE OpInfo : 4;
-	};
-	USHORT FrameOffset;
-} UNWIND_CODE, * PUNWIND_CODE;
-
-typedef struct _UNWIND_INFO
-{
-	UBYTE Version : 3;
-	UBYTE Flags : 5;
-	UBYTE SizeOfProlog;
-	UBYTE CountOfCodes;
-	UBYTE FrameRegister : 4;
-	UBYTE FrameOffset : 4;
-	UNWIND_CODE UnwindCode[1];
-
-	union {
-		OPTIONAL ULONG ExceptionHandler;
-		OPTIONAL ULONG FunctionEntry;
-	};
-	OPTIONAL ULONG ExceptionData[];
-} UNWIND_INFO, * PUNWIND_INFO;
-
-RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(const std::wstring& moduleName) {
-	InitFunctionScanner(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName.c_str())));
+RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(std::wstring_view moduleName) {
+	baseAddress_ = reinterpret_cast<DWORD64>(GetModuleHandle(moduleName.data()));
 	Scan();
 }
 
-RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(const std::string& moduleName) {
-	InitFunctionScanner(reinterpret_cast<DWORD64>(GetModuleHandleA(moduleName.c_str())));
+RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(std::string_view moduleName) {
+	baseAddress_ = reinterpret_cast<DWORD64>(GetModuleHandleA(moduleName.data()));
 	Scan();
 }
 
 RIVET_LIB_API const std::vector<Rivet::FunctionData> Rivet::FunctionScanner::getFunctions() const {
-	if (pdataInfo.address == 0)
+	if (baseAddress_ == 0)
 		return {};
 
-	const auto iterator = GCache.find(pdataInfo.address);
+	const auto iterator = GCache.find(baseAddress_);
 	if (iterator == GCache.end())
 		return {};
 
@@ -64,58 +28,84 @@ RIVET_LIB_API const std::vector<Rivet::FunctionData> Rivet::FunctionScanner::get
 }
 
 void Rivet::FunctionScanner::Scan() {
-	if (pdataInfo.address == 0 || pdataInfo.entryCount == 0)
-		return;
+    IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(baseAddress_);
+    IMAGE_NT_HEADERS* ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(baseAddress_ + dosHeader->e_lfanew);
 
-	if (GCache.find(pdataInfo.address) != GCache.end())
-		return;
+    uint64_t startAddress = 0, endAddress = 0;
+    IMAGE_SECTION_HEADER* pSection = IMAGE_FIRST_SECTION(ntHeader);
+    for (int i = 0; i < ntHeader->FileHeader.NumberOfSections; ++i, ++pSection) {
+        if (memcmp(pSection->Name, ".text", 5) != 0)
+            continue;
 
-	std::vector<FunctionData> functions;
-	functions.reserve(pdataInfo.entryCount);
+        startAddress = baseAddress_ + pSection->VirtualAddress;
+        endAddress   = startAddress + pSection->Misc.VirtualSize;
+        break;
+    }
 
-	DWORD64 pdataStart = pdataInfo.address;
-	DWORD64 pdataEnd = pdataInfo.address + pdataInfo.entryCount * sizeof(RUNTIME_FUNCTION);
+    uint8_t* code = reinterpret_cast<uint8_t*>(startAddress);
+    size_t size = endAddress - startAddress;
 
-	RUNTIME_FUNCTION* runtimeFunctions = reinterpret_cast<RUNTIME_FUNCTION*>(pdataInfo.address);
-	for (size_t index = 0; index < pdataInfo.entryCount; ++index) {
-		RUNTIME_FUNCTION& func = runtimeFunctions[index];
-		if (!func.BeginAddress || !func.EndAddress)
-			continue;
+    ZydisDecoder decoder;
+    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_STACK_WIDTH_64);
+    ZydisDecoderContext ctx = {};
 
-		DWORD64 begin  = baseAddress_ + func.BeginAddress;
-		DWORD64 end    = baseAddress_ + func.EndAddress;
-		DWORD64 unwind = baseAddress_ + func.UnwindData;
+    std::vector<uint64_t> functionStarts;
+    functionStarts.reserve(size / 4);
+    functionStarts.push_back(startAddress);
 
-		auto* unwindInfo = reinterpret_cast<UNWIND_INFO*>(unwind);
-		if (unwindInfo->Flags & UNW_FLAG_CHAININFO) {
-			DWORD64 chainedVa = baseAddress_ + unwindInfo->FunctionEntry;
+    uint64_t offset = 0;
+    while (offset < size) {
+        ZydisDecodedInstruction instr;
+        if (!ZYAN_SUCCESS(ZydisDecoderDecodeInstruction(&decoder, &ctx, code + offset, size - offset, &instr))) {
+            ++offset;
+            continue;
+        }
 
-			if (chainedVa >= pdataStart && chainedVa + sizeof(RUNTIME_FUNCTION) <= pdataEnd) {
-				RUNTIME_FUNCTION* chained = reinterpret_cast<RUNTIME_FUNCTION*>(chainedVa);
-				begin = baseAddress_ + chained->BeginAddress;
-				end = baseAddress_ + chained->EndAddress;
-				unwind = baseAddress_ + chained->UnwindData;
-			} else {
-				continue;
-			}
-		}
+        if (instr.mnemonic == ZYDIS_MNEMONIC_CALL && instr.raw.imm[0].is_signed) {
+            int64_t rel = instr.raw.imm[0].value.s;
+            uint64_t target = startAddress + offset + instr.length + rel;
 
-		functions.emplace_back(FunctionData{ begin, end });
-	}
+            if (target >= startAddress && target < endAddress)
+                functionStarts.push_back(target);
+        }
 
-	GCache[pdataInfo.address] = std::move(functions);
-}
+        offset += instr.length;
+    }
 
-void Rivet::FunctionScanner::InitFunctionScanner(DWORD64 baseAddress) {
-	baseAddress_ = baseAddress;
+    std::sort(functionStarts.begin(), functionStarts.end());
+    functionStarts.erase(std::unique(functionStarts.begin(), functionStarts.end()), functionStarts.end());
 
-	IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(baseAddress);
-	IMAGE_NT_HEADERS64* ntHeaders = reinterpret_cast<IMAGE_NT_HEADERS64*>(baseAddress + dosHeader->e_lfanew);
-	IMAGE_DATA_DIRECTORY& dataDir = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXCEPTION];
-	
-	PDataInfo output;
-	output.address = baseAddress + dataDir.VirtualAddress;
-	output.entryCount = dataDir.Size / sizeof(RUNTIME_FUNCTION);
+    std::vector<FunctionData> functions;
+    for (size_t i = 0; i < functionStarts.size(); ++i) {
+        uint64_t funcStart = functionStarts[i];
+        uint64_t funcEnd = (i + 1 < functionStarts.size()) ? functionStarts[i + 1] : endAddress;
 
-	pdataInfo = output;
+        uint64_t localOffset = funcStart - startAddress;
+
+        while (localOffset < funcEnd - startAddress) {
+            ZydisDecodedInstruction instr;
+            if (!ZYAN_SUCCESS(ZydisDecoderDecodeInstruction(&decoder, &ctx, code + localOffset, funcEnd - startAddress - localOffset, &instr))) {
+                funcEnd = funcStart + localOffset;
+                break;
+            }
+
+            if (instr.mnemonic == ZYDIS_MNEMONIC_RET) {
+                funcEnd = funcStart + localOffset + instr.length;
+                break;
+            } else if (instr.mnemonic == ZYDIS_MNEMONIC_JMP) {
+                uint64_t target = instr.raw.imm[0].is_signed ? funcStart + localOffset + instr.length + instr.raw.imm[0].value.s : instr.raw.imm[0].value.u;
+
+                if (target < funcStart || target >= funcEnd) {
+                    funcEnd = funcStart + localOffset + instr.length;
+                    break;
+                }
+            }
+
+            localOffset += instr.length;
+        }
+
+        functions.emplace_back(FunctionData{ funcStart, funcEnd });
+    }
+
+    GCache[baseAddress_] = std::move(functions);
 }

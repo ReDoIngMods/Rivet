@@ -4,6 +4,8 @@
 #include "state.h"
 #include "console.h"
 
+#include "rivet/memory/functionscanner.hpp"
+
 #include <rivet/moddef.h>
 
 #include <MinHook.h>
@@ -77,8 +79,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	for (const auto& modDef : loadedMods) {
 		Rivet::IMod* modInstance = modDef.create();
 		modInstance->onRivetInitialize();
+		
 		loaderState.addMod(modDef);
 	}
+
+	Rivet::FunctionScanner scanner("ScrapMechanic.exe");
 
 	return TRUE;
 }

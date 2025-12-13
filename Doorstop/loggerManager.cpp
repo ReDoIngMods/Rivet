@@ -91,7 +91,7 @@ Rivet::LoggerManager::~LoggerManager() {
     }
 }
 
-Rivet::Logger* Rivet::LoggerManager::getLogger(std::string_view name) {
+RIVET_DOORSTOP_API Rivet::Logger* Rivet::LoggerManager::getLogger(std::string_view name) {
 	const auto& iterator = loggers_.find(name);
 	if (iterator == loggers_.end()) {
 		Logger* logger = new Logger(name);
