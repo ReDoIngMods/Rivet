@@ -14,12 +14,14 @@ namespace Rivet {
 
 	class SignatureScanner {
 	public:
-		RIVET_LIB_API SignatureScanner(const wchar_t* moduleName);
-		RIVET_LIB_API SignatureScanner(const char* moduleName);
-		RIVET_LIB_API SignatureScanner(const std::wstring& moduleName);
-		RIVET_LIB_API SignatureScanner(const std::string& moduleName);
+		~SignatureScanner() = default;
 
-		RIVET_LIB_API SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress);
+		explicit RIVET_LIB_API SignatureScanner(const wchar_t* moduleName);
+		explicit RIVET_LIB_API SignatureScanner(const char* moduleName);
+		explicit RIVET_LIB_API SignatureScanner(const std::wstring& moduleName);
+		explicit RIVET_LIB_API SignatureScanner(const std::string& moduleName);
+
+		explicit RIVET_LIB_API SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress);
 
 		template<SignatureType type>
 		DWORD64 scanPattern(const std::string& pattern, DWORD64 offset = 0, bool useCache = true, bool cacheResult = true) {

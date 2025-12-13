@@ -193,6 +193,9 @@ exit /b 0</Command>
     <ProjectReference Include="..\Doorstop\Doorstop.vcxproj">
       <Project>{adc9313d-d3da-4795-b621-8357689176c0}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Lib\Lib.vcxproj">
+      <Project>{faa2d82a-3276-4a42-9eeb-adb2ae7603f8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.vcxproj">
       <Project>{6c260ca5-e15a-4e4c-af43-63596891df79}</Project>
     </ProjectReference>
