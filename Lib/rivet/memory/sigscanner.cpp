@@ -33,28 +33,28 @@ inline static void GetTextRange(const DWORD64 baseAddress, DWORD64& startAddress
 	}
 }
 
-Rivet::SignatureScanner::SignatureScanner(const wchar_t* moduleName) {
+RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const wchar_t* moduleName) {
 	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName)), addressStart_, addressEnd_);
 }
 
-Rivet::SignatureScanner::SignatureScanner(const char* moduleName) {
+RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const char* moduleName) {
 	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandleA(moduleName)), addressStart_, addressEnd_);
 }
 
-Rivet::SignatureScanner::SignatureScanner(const std::wstring& moduleName) {
+RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const std::wstring& moduleName) {
 	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName.c_str())), addressStart_, addressEnd_);
 }
 
-Rivet::SignatureScanner::SignatureScanner(const std::string& moduleName) {
+RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const std::string& moduleName) {
 	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandleA(moduleName.c_str())), addressStart_, addressEnd_);
 }
 
-Rivet::SignatureScanner::SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress) {
+RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress) {
 	addressStart_ = startAddress;
 	addressEnd_ = endAddress;
 }
 
-bool Rivet::SignatureScanner::ParseIDAStyle(const std::string& pattern, std::vector<uint8_t>& bytes, std::vector<uint8_t>& mask) {
+RIVET_LIB_API bool Rivet::SignatureScanner::ParseIDAStyle(const std::string& pattern, std::vector<uint8_t>& bytes, std::vector<uint8_t>& mask) {
 	std::istringstream iss(pattern);
 	std::string token;
 

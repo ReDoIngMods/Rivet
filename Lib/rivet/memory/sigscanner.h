@@ -14,12 +14,12 @@ namespace Rivet {
 
 	class SignatureScanner {
 	public:
-		SignatureScanner(const wchar_t* moduleName);
-		SignatureScanner(const char* moduleName);
-		SignatureScanner(const std::wstring& moduleName);
-		SignatureScanner(const std::string& moduleName);
+		RIVET_LIB_API SignatureScanner(const wchar_t* moduleName);
+		RIVET_LIB_API SignatureScanner(const char* moduleName);
+		RIVET_LIB_API SignatureScanner(const std::wstring& moduleName);
+		RIVET_LIB_API SignatureScanner(const std::string& moduleName);
 
-		SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress);
+		RIVET_LIB_API SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress);
 
 		template<SignatureType type>
 		DWORD64 scanPattern(const std::string& pattern, DWORD64 offset = 0, bool useCache = true, bool cacheResult = true) {
@@ -36,7 +36,7 @@ namespace Rivet {
 			return scanPatternRaw(bytes, mask, offset, useCache, cacheResult);
 		}
 	private:
-		static bool ParseIDAStyle(const std::string& pattern, std::vector<uint8_t>& bytes, std::vector<uint8_t>& mask);
+		RIVET_LIB_API static bool ParseIDAStyle(const std::string& pattern, std::vector<uint8_t>& bytes, std::vector<uint8_t>& mask);
 
 		RIVET_LIB_API DWORD64 scanPatternRaw(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask, DWORD64 offset, bool useCache, bool cacheResult);
 
