@@ -2,7 +2,7 @@
 #include "loggerManager.h"
 
 void Rivet::Logger::_log(Rivet::LogLevel logLevel, const std::string_view& format, va_list arguments) {
-	Rivet::LoggerManager& loggerMgr = Rivet::LoggerManager::GetInstance();
+	Rivet::LoggerManager& loggerMgr = Rivet::LoggerManager::getInstance();
 	loggerMgr.sendRawLog(logLevel, name_, format, arguments);
 }
 

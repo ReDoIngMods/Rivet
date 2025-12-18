@@ -11,7 +11,7 @@ namespace Rivet {
 		LoggerManager();
 		~LoggerManager();
 
-		RIVET_DOORSTOP_API static Rivet::LoggerManager& GetInstance() {
+		RIVET_DOORSTOP_API static Rivet::LoggerManager& getInstance() {
 			static LoggerManager instance;
 			return instance;
 		}

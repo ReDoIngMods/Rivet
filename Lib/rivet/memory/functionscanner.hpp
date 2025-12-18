@@ -14,14 +14,13 @@ namespace Rivet {
 	class FunctionScanner {
 	public:
 		RIVET_LIB_API ~FunctionScanner() = default;
-
-		RIVET_LIB_API explicit FunctionScanner(std::wstring_view moduleName);
 		RIVET_LIB_API explicit FunctionScanner(std::string_view moduleName);
 
 		RIVET_LIB_API const std::vector<Rivet::FunctionData> getFunctions() const;
 	private:
-		void Scan();
+		void Scan() const;
 		
-		DWORD64 baseAddress_ = 0;
+		DWORD64 startAddress_ = 0;
+		DWORD64 endAddress_ = 0;
 	};
 }

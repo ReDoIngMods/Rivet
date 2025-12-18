@@ -1,4 +1,6 @@
 #include "sigscanner.h"
+#include "peheaders.hpp"
+
 #include <sstream>
 #include <mutex>
 
@@ -17,28 +19,16 @@ inline static size_t HashPattern(const std::vector<uint8_t>& bytes, const std::v
 	return hash;
 }
 
-inline static void GetTextRange(const DWORD64 baseAddress, DWORD64& startAddress, DWORD64& endAddress) {
-	IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(baseAddress);
-	IMAGE_NT_HEADERS* ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(baseAddress + dosHeader->e_lfanew);
-
-	IMAGE_SECTION_HEADER* pSection = IMAGE_FIRST_SECTION(ntHeader);
-	for (int i = 0; i < ntHeader->FileHeader.NumberOfSections; ++i, ++pSection) {
-		if (memcmp(pSection->Name, ".text", 5) != 0)
-			continue;
-
-		startAddress = baseAddress + pSection->VirtualAddress;
-		endAddress = startAddress + pSection->Misc.VirtualSize;
-
-		break;
-	}
-}
-
-RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const std::wstring& moduleName) {
-	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandle(moduleName.c_str())), addressStart_, addressEnd_);
-}
-
 RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const std::string& moduleName) {
-	GetTextRange(reinterpret_cast<DWORD64>(GetModuleHandleA(moduleName.c_str())), addressStart_, addressEnd_);
+	PEHeaderManager& peHeaderMgr = PEHeaderManager::getInstance();
+
+	PEHeadersMap headers;
+	if (!peHeaderMgr.queryModuleHeaders("ScrapMechanic.exe", headers))
+		return;
+
+	PEHeader header = headers[".text"];
+	addressStart_ = header.startAddress;
+	addressEnd_ = header.endAddress;
 }
 
 RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress) {
