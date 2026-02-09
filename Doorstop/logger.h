@@ -1,6 +1,5 @@
 #pragma once
 #include "includes.h"
-#include <cstdarg>
 
 #include "sharedmacros.h"
 
@@ -15,13 +14,13 @@ namespace Rivet {
 	class Logger {
 		std::string_view name_;
 
-		void _log(Rivet::LogLevel logLevel, const std::string_view& format, va_list arguments);
+		void Log(LogLevel logLevel, const std::string_view& format, va_list arguments) const;
 	public:
 		Logger(const std::string_view& name);
 
-		RIVET_DOORSTOP_API void info(const std::string_view format, ...);
-		RIVET_DOORSTOP_API void warn(const std::string_view format, ...);
-		RIVET_DOORSTOP_API void error(const std::string_view format, ...);
-		RIVET_DOORSTOP_API void debug(const std::string_view format, ...);
+		RIVET_DOORSTOP_API void Info(std::string_view format, ...) const;
+		RIVET_DOORSTOP_API void Warn(std::string_view format, ...) const;
+		RIVET_DOORSTOP_API void Error(std::string_view format, ...) const;
+		RIVET_DOORSTOP_API void Debug(std::string_view format, ...) const;
 	};
 }

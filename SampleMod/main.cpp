@@ -4,11 +4,11 @@
 
 class SampleMod : public Rivet::IMod {
 public:
-	void onRivetInitialize() override {
+	void OnRivetInitialize() override {
 		MessageBoxA(nullptr, "SampleMod: onRivetInitialize called!", "SampleMod", MB_OK);
 	}
 
-	void onContraptionInitialize() override {
+	void OnContraptionInitialize() override {
 		MessageBoxA(nullptr, "SampleMod: onContraptionInitialize called!", "SampleMod", MB_OK);
 	}
 };

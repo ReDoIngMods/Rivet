@@ -14,22 +14,24 @@ namespace Rivet {
 	class Logger {
 		std::string_view name_;
 
-		void _log(Rivet::LogLevel logLevel, const std::string_view& format, va_list arguments);
-	public:
-		Logger(const std::string_view& name);
+		static void Log(LogLevel logLevel, const std::string_view& format, va_list arguments) {}
 
-		RIVET_DOORSTOP_API void info(const std::string_view format, ...);
-		RIVET_DOORSTOP_API void warn(const std::string_view format, ...);
-		RIVET_DOORSTOP_API void error(const std::string_view format, ...);
-		RIVET_DOORSTOP_API void debug(const std::string_view format, ...);
+	public:
+		explicit Logger(const std::string_view& name);
+
+		RIVET_DOORSTOP_API void Info(std::string_view format, ...);
+		RIVET_DOORSTOP_API void Warn(std::string_view format, ...);
+		RIVET_DOORSTOP_API void Error(std::string_view format, ...);
+		RIVET_DOORSTOP_API void Debug(std::string_view format, ...);
 	};
 
 	class LoggerManager {
 		LoggerManager() = delete;
 		LoggerManager(const LoggerManager&) = delete;
 		LoggerManager& operator=(const LoggerManager&) = delete;
+		
 	public:
 		RIVET_DOORSTOP_API static LoggerManager& GetInstance();
-		RIVET_DOORSTOP_API Rivet::Logger* getLogger(std::string_view name);
+		RIVET_DOORSTOP_API Logger* GetLogger(std::string_view name);
 	};
 }

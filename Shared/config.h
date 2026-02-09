@@ -21,7 +21,7 @@ namespace Rivet {
 			std::wstring valueW(buffer, charsRead);
             if constexpr (std::is_same_v<T, bool>) {
                 std::wstring lowerValue;
-                std::transform(valueW.begin(), valueW.end(), std::back_inserter(lowerValue), ::towlower);
+                std::transform(valueW.begin(), valueW.end(), std::back_inserter(lowerValue), towlower);
                 if (lowerValue == L"true" || lowerValue == L"1") {
                     return true;
                 } else if (lowerValue == L"false" || lowerValue == L"0") {

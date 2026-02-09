@@ -9,20 +9,20 @@
 static std::unordered_map<DWORD64, std::vector<Rivet::FunctionData>> GCache;
 
 RIVET_LIB_API Rivet::FunctionScanner::FunctionScanner(std::string_view moduleName) {
-    PEHeaderManager& peHeaderMgr = PEHeaderManager::getInstance();
+    PEHeaderManager& peHeaderMgr = PEHeaderManager::GetInstance();
 
     PEHeadersMap headers;
-    if (!peHeaderMgr.queryModuleHeaders("ScrapMechanic.exe", headers))
+    if (!peHeaderMgr.QueryModuleHeaders("ScrapMechanic.exe", headers))
         return;
 
-    PEHeader header = headers[".text"];
-    startAddress_ = header.startAddress;
-    endAddress_ = header.endAddress;
+    const auto [startAddress, endAddress] = headers[".text"];
+    startAddress_ = startAddress;
+    endAddress_ = endAddress;
 
 	Scan();
 }
 
-RIVET_LIB_API const std::vector<Rivet::FunctionData> Rivet::FunctionScanner::getFunctions() const {
+RIVET_LIB_API std::vector<Rivet::FunctionData> Rivet::FunctionScanner::GetFunctions() const {
 	if (startAddress_ == 0 || endAddress_ == 0)
 		return {};
 
@@ -40,10 +40,10 @@ void Rivet::FunctionScanner::Scan() const {
     if (GCache.contains(startAddress_))
         return;
 
-    IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(startAddress_);
-    IMAGE_NT_HEADERS* ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(startAddress_ + dosHeader->e_lfanew);
+    auto dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(startAddress_);
+    auto ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(startAddress_ + dosHeader->e_lfanew);
 
-    uint8_t* code = reinterpret_cast<uint8_t*>(startAddress_);
+    auto code = reinterpret_cast<uint8_t*>(startAddress_);
     size_t size = endAddress_ - startAddress_;
 
     ZydisDecoder decoder;
@@ -73,7 +73,7 @@ void Rivet::FunctionScanner::Scan() const {
         offset += instr.length;
     }
 
-    std::sort(functionStarts.begin(), functionStarts.end());
+    std::ranges::sort(functionStarts);
     functionStarts.erase(std::unique(functionStarts.begin(), functionStarts.end()), functionStarts.end());
 
     std::vector<FunctionData> functions;
@@ -93,7 +93,8 @@ void Rivet::FunctionScanner::Scan() const {
             if (instr.mnemonic == ZYDIS_MNEMONIC_RET) {
                 funcEnd = funcStart + localOffset + instr.length;
                 break;
-            } else if (instr.mnemonic == ZYDIS_MNEMONIC_JMP) {
+            }
+            if (instr.mnemonic == ZYDIS_MNEMONIC_JMP) {
                 uint64_t target = instr.raw.imm[0].is_signed ? funcStart + localOffset + instr.length + instr.raw.imm[0].value.s : instr.raw.imm[0].value.u;
 
                 if (target < funcStart || target >= funcEnd) {
@@ -105,7 +106,7 @@ void Rivet::FunctionScanner::Scan() const {
             localOffset += instr.length;
         }
 
-        functions.emplace_back(FunctionData{ funcStart, funcEnd });
+        functions.emplace_back(FunctionData{ .startAddress = funcStart, .endAddress = funcEnd });
     }
 
     GCache[startAddress_] = std::move(functions);

@@ -78,7 +78,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 
 	for (const auto& modDef : loadedMods) {
 		Rivet::IMod* modInstance = modDef.create();
-		modInstance->onRivetInitialize();
+		modInstance->OnRivetInitialize();
 		
 		loaderState.addMod(modDef);
 	}

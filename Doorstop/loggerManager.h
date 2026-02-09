@@ -11,14 +11,14 @@ namespace Rivet {
 		LoggerManager();
 		~LoggerManager();
 
-		RIVET_DOORSTOP_API static Rivet::LoggerManager& getInstance() {
+		RIVET_DOORSTOP_API static LoggerManager& GetInstance() {
 			static LoggerManager instance;
 			return instance;
 		}
 
-		RIVET_DOORSTOP_API Rivet::Logger* getLogger(std::string_view name);
+		RIVET_DOORSTOP_API Logger* GetLogger(std::string_view name);
 
-		void sendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments);
+		void SendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments);
 
 		struct Buffer {
 			char* buffer = nullptr;
@@ -27,7 +27,6 @@ namespace Rivet {
 
 	private:
 		LoggerManager(const LoggerManager&) = delete;
-		LoggerManager& operator=(const LoggerManager&) = delete;
 
 		HANDLE hStdOut_ = INVALID_HANDLE_VALUE;
 		HANDLE hFileOut_ = INVALID_HANDLE_VALUE;
@@ -38,7 +37,5 @@ namespace Rivet {
 		Buffer logBuffer_;
 
 		std::unordered_map<std::string_view, Logger*> loggers_;
-
-	public:
 	};
 }

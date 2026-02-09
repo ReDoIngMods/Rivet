@@ -16,7 +16,7 @@ namespace Rivet {
 		RIVET_LIB_API ~FunctionScanner() = default;
 		RIVET_LIB_API explicit FunctionScanner(std::string_view moduleName);
 
-		RIVET_LIB_API const std::vector<Rivet::FunctionData> getFunctions() const;
+		RIVET_LIB_API std::vector<FunctionData> GetFunctions() const;
 	private:
 		void Scan() const;
 		

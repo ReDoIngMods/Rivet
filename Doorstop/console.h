@@ -5,7 +5,7 @@ namespace Rivet {
 	extern Logger* GLogger;
 }
 
-#define CONSOLE_INFO Rivet::GLogger->info
-#define CONSOLE_WARN Rivet::GLogger->warn
-#define CONSOLE_ERROR Rivet::GLogger->error
-#define CONSOLE_DEBUG Rivet::GLogger->debug
+#define CONSOLE_INFO Rivet::GLogger->Info
+#define CONSOLE_WARN Rivet::GLogger->Warn
+#define CONSOLE_ERROR Rivet::GLogger->Error
+#define CONSOLE_DEBUG Rivet::GLogger->Debug

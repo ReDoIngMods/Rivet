@@ -57,8 +57,8 @@ Rivet::LoggerManager::LoggerManager() {
     logBuffer_.size = 0xFF + 1;
     logBuffer_.buffer = new char[logBuffer_.size];
 
-    Rivet::Flags genericFlags = Rivet::Flags::GetFlags();
-    Rivet::DoorstopFlags& flags = genericFlags.doorstop;
+    Flags genericFlags = Flags::GetFlags();
+    DoorstopFlags& flags = genericFlags.doorstop;
 
 	if (!flags.hideConsole) {
 		AllocConsole();
@@ -76,7 +76,7 @@ Rivet::LoggerManager::LoggerManager() {
 		}
     }
     
-    sendRawLog(Rivet::LogLevel::Info, "LoggerManager", "Initialized Console!", nullptr);
+    SendRawLog(LogLevel::Info, "LoggerManager", "Initialized Console!", nullptr);
 }
 
 Rivet::LoggerManager::~LoggerManager() { 
@@ -91,7 +91,7 @@ Rivet::LoggerManager::~LoggerManager() {
     }
 }
 
-RIVET_DOORSTOP_API Rivet::Logger* Rivet::LoggerManager::getLogger(std::string_view name) {
+RIVET_DOORSTOP_API Rivet::Logger* Rivet::LoggerManager::GetLogger(std::string_view name) {
 	const auto& iterator = loggers_.find(name);
 	if (iterator == loggers_.end()) {
 		Logger* logger = new Logger(name);
@@ -103,7 +103,7 @@ RIVET_DOORSTOP_API Rivet::Logger* Rivet::LoggerManager::getLogger(std::string_vi
 	return iterator->second;
 }
 
-void Rivet::LoggerManager::sendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments) {
+void Rivet::LoggerManager::SendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments) {
 	const char* levelStr = nullptr;
     ConsoleColor color = ConsoleColor::White;
 

@@ -15,17 +15,16 @@ namespace Rivet {
 
 	class PEHeaderManager {
 	public:
-		RIVET_LIB_API static Rivet::PEHeaderManager& getInstance() {
+		RIVET_LIB_API static PEHeaderManager& GetInstance() {
 			static PEHeaderManager instance;
 			return instance;
 		}
 
-		RIVET_LIB_API std::vector<std::string> getLoadedModuleNames();
+		RIVET_LIB_API std::vector<std::string> GetLoadedModuleNames();
 
-		RIVET_LIB_API bool loadHeadersForModule(const std::string& moduleName);
-		RIVET_LIB_API bool queryModuleHeaders(const std::string& moduleName, PEHeadersMap& headers);
+		RIVET_LIB_API bool LoadHeadersForModule(const std::string& moduleName);
+		RIVET_LIB_API bool QueryModuleHeaders(const std::string& moduleName, PEHeadersMap& headers);
 	private:
 		std::unordered_map<std::string, PEHeadersMap> modules_;
-	public:
 	};
 }

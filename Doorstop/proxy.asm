@@ -1,20 +1,20 @@
 OPTION CASEMAP:NONE ; Don't change the case of any identifiers (e.g. `GetFileVersionInfoA` stays the same)
 
-EXTERN pGetFileVersionInfoW:QWORD
-EXTERN pGetFileVersionInfoA:QWORD
-EXTERN pGetFileVersionInfoSizeW:QWORD
-EXTERN pVerQueryValueA:QWORD
-EXTERN pVerQueryValueW:QWORD
-EXTERN pGetFileVersionInfoByHandle:QWORD
-EXTERN pGetFileVersionInfoExA:QWORD
-EXTERN pGetFileVersionInfoExW:QWORD
-EXTERN pGetFileVersionInfoSizeA:QWORD
-EXTERN pGetFileVersionInfoSizeExA:QWORD
-EXTERN pGetFileVersionInfoSizeExW:QWORD
-EXTERN pVerFindFileA:QWORD
-EXTERN pVerFindFileW:QWORD
-EXTERN pVerInstallFileA:QWORD
-EXTERN pVerInstallFileW:QWORD
+EXTERN PGetFileVersionInfoW:QWORD
+EXTERN PGetFileVersionInfoA:QWORD
+EXTERN PGetFileVersionInfoSizeW:QWORD
+EXTERN PVerQueryValueA:QWORD
+EXTERN PVerQueryValueW:QWORD
+EXTERN PGetFileVersionInfoByHandle:QWORD
+EXTERN PGetFileVersionInfoExA:QWORD
+EXTERN PGetFileVersionInfoExW:QWORD
+EXTERN PGetFileVersionInfoSizeA:QWORD
+EXTERN PGetFileVersionInfoSizeExA:QWORD
+EXTERN PGetFileVersionInfoSizeExW:QWORD
+EXTERN PVerFindFileA:QWORD
+EXTERN PVerFindFileW:QWORD
+EXTERN PVerInstallFileA:QWORD
+EXTERN PVerInstallFileW:QWORD
 
 .code
 
@@ -22,77 +22,77 @@ EXTERN pVerInstallFileW:QWORD
 
 PUBLIC GetFileVersionInfoW
 GetFileVersionInfoW PROC
-	jmp qword ptr [pGetFileVersionInfoW]
+	jmp qword ptr [PGetFileVersionInfoW]
 GetFileVersionInfoW ENDP
 
 PUBLIC GetFileVersionInfoA
 GetFileVersionInfoA PROC
-	jmp qword ptr [pGetFileVersionInfoA]
+	jmp qword ptr [PGetFileVersionInfoA]
 GetFileVersionInfoA ENDP
 
 PUBLIC GetFileVersionInfoSizeW
 GetFileVersionInfoSizeW PROC
-	jmp qword ptr [pGetFileVersionInfoSizeW]
+	jmp qword ptr [PGetFileVersionInfoSizeW]
 GetFileVersionInfoSizeW ENDP
 
 PUBLIC VerQueryValueA
 VerQueryValueA PROC
-	jmp qword ptr [pVerQueryValueA]
+	jmp qword ptr [PVerQueryValueA]
 VerQueryValueA ENDP
 
 PUBLIC VerQueryValueW
 VerQueryValueW PROC
-	jmp qword ptr [pVerQueryValueW]
+	jmp qword ptr [PVerQueryValueW]
 VerQueryValueW ENDP
 
 PUBLIC GetFileVersionInfoByHandle
 GetFileVersionInfoByHandle PROC
-	jmp qword ptr [pGetFileVersionInfoByHandle]
+	jmp qword ptr [PGetFileVersionInfoByHandle]
 GetFileVersionInfoByHandle ENDP
 
 PUBLIC GetFileVersionInfoExA
 GetFileVersionInfoExA PROC
-	jmp qword ptr [pGetFileVersionInfoExA]
+	jmp qword ptr [PGetFileVersionInfoExA]
 GetFileVersionInfoExA ENDP
 
 PUBLIC GetFileVersionInfoExW
 GetFileVersionInfoExW PROC
-	jmp qword ptr [pGetFileVersionInfoExW]
+	jmp qword ptr [PGetFileVersionInfoExW]
 GetFileVersionInfoExW ENDP
 
 PUBLIC GetFileVersionInfoSizeA
 GetFileVersionInfoSizeA PROC
-	jmp qword ptr [pGetFileVersionInfoSizeA]
+	jmp qword ptr [PGetFileVersionInfoSizeA]
 GetFileVersionInfoSizeA ENDP
 
 PUBLIC GetFileVersionInfoSizeExA
 GetFileVersionInfoSizeExA PROC
-	jmp qword ptr [pGetFileVersionInfoSizeExA]
+	jmp qword ptr [PGetFileVersionInfoSizeExA]
 GetFileVersionInfoSizeExA ENDP
 
 PUBLIC GetFileVersionInfoSizeExW
 GetFileVersionInfoSizeExW PROC
-	jmp qword ptr [pGetFileVersionInfoSizeExW]
+	jmp qword ptr [PGetFileVersionInfoSizeExW]
 GetFileVersionInfoSizeExW ENDP
 
 PUBLIC VerFindFileA
 VerFindFileA PROC
-	jmp qword ptr [pVerFindFileA]
+	jmp qword ptr [PVerFindFileA]
 VerFindFileA ENDP
 
 PUBLIC VerFindFileW
 VerFindFileW PROC
-	jmp qword ptr [pVerFindFileW]
+	jmp qword ptr [PVerFindFileW]
 VerFindFileW ENDP
 
 PUBLIC VerInstallFileA
 VerInstallFileA PROC
-	jmp qword ptr [pVerInstallFileA]
+	jmp qword ptr [PVerInstallFileA]
 VerInstallFileA ENDP
 
 PUBLIC VerInstallFileW
 VerInstallFileW PROC
-	jmp qword ptr [pVerInstallFileW]
+	jmp qword ptr [PVerInstallFileW]
 VerInstallFileW ENDP
 
 END

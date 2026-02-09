@@ -4,53 +4,55 @@
 #include <sstream>
 #include <mutex>
 
-static std::unordered_map<size_t, DWORD64> SignatureCache;
-static std::mutex SignatureCacheMutex;
+using namespace Rivet;
 
-inline static size_t HashPattern(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask) {
-	size_t hash = 0xcbf29ce484222325; // FNV-1a offset basis
+namespace {
+	std::unordered_map<size_t, DWORD64> SignatureCache;
+	std::mutex SignatureCacheMutex;
 
-	for (size_t index = 0; index < bytes.size(); ++index) {
-		uint8_t b = mask[index] ? 0xFF : bytes[index];
-		hash ^= b;
-		hash *= 0x100000001b3; // FNV prime
+	size_t HashPattern(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask) {
+		size_t hash = 0xcbf29ce484222325; // FNV-1a offset basis
+
+		for (size_t index = 0; index < bytes.size(); ++index) {
+			uint8_t b = mask[index] ? 0xFF : bytes[index];
+			hash ^= b;
+			hash *= 0x100000001b3; // FNV prime
+		}
+
+		return hash;
 	}
-
-	return hash;
 }
 
-RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const std::string& moduleName) {
-	PEHeaderManager& peHeaderMgr = PEHeaderManager::getInstance();
+RIVET_LIB_API SignatureScanner::SignatureScanner(const std::string& moduleName) {
+	PEHeaderManager& peHeaderMgr = PEHeaderManager::GetInstance();
 
 	PEHeadersMap headers;
-	if (!peHeaderMgr.queryModuleHeaders("ScrapMechanic.exe", headers))
+	if (!peHeaderMgr.QueryModuleHeaders("ScrapMechanic.exe", headers))
 		return;
 
-	PEHeader header = headers[".text"];
-	addressStart_ = header.startAddress;
-	addressEnd_ = header.endAddress;
-}
-
-RIVET_LIB_API Rivet::SignatureScanner::SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress) {
+	const auto [startAddress, endAddress] = headers[".text"];
 	addressStart_ = startAddress;
 	addressEnd_ = endAddress;
 }
 
-RIVET_LIB_API bool Rivet::SignatureScanner::ParseIDAStyle(const std::string& pattern, std::vector<uint8_t>& bytes, std::vector<uint8_t>& mask) {
+RIVET_LIB_API SignatureScanner::SignatureScanner(const DWORD64 startAddress, const DWORD64 endAddress) {
+	addressStart_ = startAddress;
+	addressEnd_ = endAddress;
+}
+
+RIVET_LIB_API bool SignatureScanner::ParseIDAStyle(const std::string& pattern, std::vector<uint8_t>& bytes, std::vector<uint8_t>& mask) {
 	std::istringstream iss(pattern);
 	std::string token;
 
 	while (iss >> token) {
-		bool isMaskByte = token == "?" || token == "??";
-
-		if (isMaskByte) {
+		if (token == "?" || token == "??") {
 			bytes.push_back(0);
 			mask.push_back(0);
 		} else {
 			if (token.size() > 2 || token.empty())
 				return false;
 
-			unsigned long value = stoul(token, nullptr, 16);
+			const unsigned long value = stoul(token, nullptr, 16);
 			if (value > 0xFF)
 				return false;
 
@@ -62,21 +64,21 @@ RIVET_LIB_API bool Rivet::SignatureScanner::ParseIDAStyle(const std::string& pat
 	return true;
 }
 
-RIVET_LIB_API DWORD64 Rivet::SignatureScanner::scanPatternRaw(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask, DWORD64 offset, bool useCache, bool cacheResult) {
+RIVET_LIB_API DWORD64 SignatureScanner::ScanPatternRaw(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask, DWORD64 offset, bool useCache, bool cacheResult) const {
 	if (bytes.empty() || mask.empty() || bytes.size() != mask.size())
 		return 0;
 
-	size_t patternKey = HashPattern(bytes, mask);
+	const size_t patternKey = HashPattern(bytes, mask);
 	if (useCache) {
-		std::lock_guard<std::mutex> lock(SignatureCacheMutex);
+		std::scoped_lock lock(SignatureCacheMutex);
 
-		auto it = SignatureCache.find(patternKey);
+		const auto it = SignatureCache.find(patternKey);
 		if (it != SignatureCache.end())
 			return it->second;
 	}
 
 	const size_t patternSize = bytes.size();
-	const size_t tableSize = 256;
+	constexpr size_t tableSize = 256;
 
 	uint8_t badCharacters[tableSize];
 	std::fill_n(badCharacters, tableSize, static_cast<uint8_t>(patternSize));
@@ -86,8 +88,8 @@ RIVET_LIB_API DWORD64 Rivet::SignatureScanner::scanPatternRaw(const std::vector<
 			badCharacters[bytes[index]] = static_cast<uint8_t>(patternSize - 1 - index);
 	}
 
-	uint8_t* start = reinterpret_cast<uint8_t*>(addressStart_);
-	uint8_t* end = reinterpret_cast<uint8_t*>(addressEnd_ - patternSize + 1);
+	auto start = reinterpret_cast<uint8_t*>(addressStart_);
+	auto end = reinterpret_cast<uint8_t*>(addressEnd_ - patternSize + 1);
 
 	size_t index = 0;
 
@@ -110,7 +112,7 @@ RIVET_LIB_API DWORD64 Rivet::SignatureScanner::scanPatternRaw(const std::vector<
 	}
 
 	if (cacheResult && result != 0) {
-		std::lock_guard<std::mutex> lock(SignatureCacheMutex);
+		std::scoped_lock lock(SignatureCacheMutex);
 		SignatureCache[patternKey] = result;
 	}
 

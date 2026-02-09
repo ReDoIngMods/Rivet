@@ -1,37 +1,39 @@
 #include "logger.h"
 #include "loggerManager.h"
 
-void Rivet::Logger::_log(Rivet::LogLevel logLevel, const std::string_view& format, va_list arguments) {
-	Rivet::LoggerManager& loggerMgr = Rivet::LoggerManager::getInstance();
-	loggerMgr.sendRawLog(logLevel, name_, format, arguments);
+using namespace Rivet;
+
+void Logger::Log(const LogLevel logLevel, const std::string_view& format, const va_list arguments) const {
+	LoggerManager& loggerMgr = LoggerManager::GetInstance();
+	loggerMgr.SendRawLog(logLevel, name_, format, arguments);
 }
 
-Rivet::Logger::Logger(const std::string_view& name) : name_(name) {}
+Logger::Logger(const std::string_view& name) : name_(name) {}
 
-void Rivet::Logger::info(const std::string_view format, ...) {
+void Logger::Info(const std::string_view format, ...) const {
 	va_list args;
 	va_start(args, format);
-	_log(LogLevel::Info, format, args);
+	Log(LogLevel::Info, format, args);
 	va_end(args);
 }
 
-void Rivet::Logger::warn(const std::string_view format, ...) {
+void Logger::Warn(const std::string_view format, ...) const {
 	va_list args;
 	va_start(args, format);
-	_log(LogLevel::Warning, format, args);
+	Log(LogLevel::Warning, format, args);
 	va_end(args);
 }
 
-void Rivet::Logger::error(const std::string_view format, ...) {
+void Logger::Error(const std::string_view format, ...) const {
 	va_list args;
 	va_start(args, format);
-	_log(LogLevel::Error, format, args);
+	Log(LogLevel::Error, format, args);
 	va_end(args);
 }
 
-void Rivet::Logger::debug(const std::string_view format, ...) {
+void Logger::Debug(const std::string_view format, ...) const {
 	va_list args;
 	va_start(args, format);
-	_log(LogLevel::Debug, format, args);
+	Log(LogLevel::Debug, format, args);
 	va_end(args);
 }
