@@ -60,6 +60,7 @@ def create_package_bytes() -> bytes:
             │
             └───Mods
     """
+
     
     # Validate required files exist
     assert rivet_loader_file.exists(), f"Missing: {rivet_loader_file}"
@@ -80,7 +81,6 @@ def create_package_bytes() -> bytes:
         package.writestr("RivetPack/version.dll", version_data)
         package.writestr("RivetPack/Rivet.ini", b"")
 
-        # Add RivetPack/Rivet/Loader.dll
         package.writestr("RivetPack/Rivet/Loader.dll", rivet_loader_data)
 
         # Add dummy files Rivet.ini, Rivet.log, and Mods/ directory
