@@ -1,23 +1,42 @@
 # Rivet
 
-Rivet is a modding toolkit for Scrap Mechanic. It gives you a clean way to inject DLLs into the game process and to load mods in a structured, discoverable way.
+A mod loader for **Scrap Mechanic**. Install it, drop mods into a folder, and the game loads them at startup.
 
-At a high level Rivet consists of:
+> Rivet is early in development. Expect rough edges and back up your saves.
 
-- `RivetDoorstop`: gets a DLL into the game as early as possible using DLL hijacking. You can imagine this alike to [Unity Doorstop](https://github.com/NeighTools/UnityDoorstop).
-- `RivetLoader`: discovers and loads mods, using metadata and interfaces where available. You can imagine this like [BepInEx](https://github.com/BepInEx/BepInEx).
-- `RivetLib`: the library that mods use to integrate with Rivet, similar in spirit to how BepInEx and Harmony are used for Unity. You can imagine this like [BepInEx's API](https://docs.bepinex.dev/api/index.html) and [Harmony](https://github.com/pardeike/Harmony).
+## Installing
 
-If you just want to get started, the [Installation Guide](./docs/installation.md) walks through setting up Rivet for a game, and the [Overview](./docs/overview.md) explains how these pieces fit together.
+The easiest way is through a mod manager like [r2modman](https://thunderstore.io/c/scrap-mechanic/p/ebkr/r2modman/) or the Thunderstore Mod Manager — click **Install** at the top of this page and you're done.
 
-> Currently under heavy development, not ready for real use.
+If you'd rather install by hand, see the [manual install guide](https://github.com/ReDoIngMods/Rivet/blob/main/docs/installation.md).
 
-> Please refer to the [Installation Guide](./docs/installation.md) to set up Rivet for Scrap Mechanic. There is also an [Overview](./docs/overview.md) document that explains how Rivet works and what each component does.
+## Turning Rivet on
 
-## Thanks
+Rivet ships **disabled** so it can't surprise you. To turn it on:
 
-This project would not exist without the help and feedback of many people.
+- **Through a mod manager:** launch the game from the manager — Rivet is enabled automatically.
+- **Manually:** open `Rivet.ini` in your game folder and set `enable=true`, or add `-rivetEnable` to your Steam launch options.
 
-- [@QuestionableM](https://github.com/QuestionableM): For helping with proxying knowledge (e.g. for prompting me to look into asm thunks for proxying DLL exports).
-- [@crackx02](https://github.com/crackx02): For helping debug various issues with the DLL loading process.
-- Everyone in the [ReDoIng Mods](https://github.com/ReDoIngMods) organization for ideas, testing, and general support.
+## Adding mods
+
+Drop mod `.dll` files into the `Rivet/Mods/` folder next to `ScrapMechanic.exe`. Most mods from Thunderstore will place themselves there for you.
+
+## Tweaking it
+
+Rivet has a handful of options in `Rivet.ini` — things like hiding the console window, changing the mods folder, or pointing it at a different log file. The full list lives in the [configuration guide](https://github.com/ReDoIngMods/Rivet/blob/main/docs/config.md).
+
+## Something broken?
+
+- Check your `rivet.log` in the game folder first — it usually says what went wrong.
+- Report issues on the [GitHub issue tracker](https://github.com/ReDoIngMods/Rivet/issues).
+
+## Credits
+
+Rivet is built and maintained with help from a lot of people:
+
+- [@VeraDev0](https://github.com/VeraDev0) — contributions and ongoing development
+- [@QuestionableM](https://github.com/QuestionableM) — DLL proxying knowledge
+- [@crackx02](https://github.com/crackx02) — debugging the DLL loading pipeline
+- Everyone in [ReDoIng Mods](https://github.com/ReDoIngMods) for ideas, testing, and support
+
+Source code, docs, and mod-development info: [github.com/ReDoIngMods/Rivet](https://github.com/ReDoIngMods/Rivet)
