@@ -1,5 +1,5 @@
 #include <rivet/logging.h>
-#include "doorstopFlags.h"
+#include "DoorstopFlags.h"
 
 // Helper class
 enum class ConsoleColor : WORD {

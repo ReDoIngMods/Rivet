@@ -1,4 +1,4 @@
-#include "loaderFlags.h"
+#include "LoaderFlags.h"
 
 #include "cli.h"
 #include "config.h"

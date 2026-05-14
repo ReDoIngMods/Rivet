@@ -1,5 +1,5 @@
-#include <rivet/memory/sigScanner.h>
-#include <rivet/memory/peHeaders.h>
+#include <rivet/memory/SigScanner.h>
+#include <rivet/memory/PeHeaders.h>
 
 #include <sstream>
 #include <mutex>

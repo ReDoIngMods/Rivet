@@ -1,4 +1,4 @@
-#include "doorstopFlags.h"
+#include "DoorstopFlags.h"
 
 #include "cli.h"
 #include "config.h"

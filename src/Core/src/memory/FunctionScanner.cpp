@@ -1,5 +1,5 @@
-#include <rivet/memory/functionScanner.h>
-#include <rivet/memory/peHeaders.h>
+#include <rivet/memory/FunctionScanner.h>
+#include <rivet/memory/PeHeaders.h>
 
 #include <unordered_map>
 #include <algorithm>

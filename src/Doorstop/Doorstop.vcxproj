@@ -13,8 +13,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e339d19c-fbda-4c9a-bd27-c814fab7d74a}</ProjectGuid>
-    <RootNamespace>Loader</RootNamespace>
+    <ProjectGuid>{adc9313d-d3da-4795-b621-8357689176c0}</ProjectGuid>
+    <RootNamespace>Doorstop</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -33,6 +33,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -44,47 +45,27 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>RivetLoader</TargetName>
+    <TargetName>version</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>RivetLoader</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgUseMD>true</VcpkgUseMD>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgUseMD>true</VcpkgUseMD>
+    <TargetName>version</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>RIVET_LIB_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_NAME="$(TargetName).dll";RIVET_DOORSTOP_EXPORTS;RIVET_LIB_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\Doorstop\include;$(SolutionDir)src\Core\include;$(SolutionDir)src\Lib\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <DelayLoadDLLs>
-      </DelayLoadDLLs>
+      <OutputFile>$(OutDir)version$(TargetExt)</OutputFile>
+      <ModuleDefinitionFile>src\proxy.def</ModuleDefinitionFile>
     </Link>
-    <PostBuildEvent>
-      <Command>where python &gt;nul 2&gt;nul
-if %ERRORLEVEL%==0 (
-    python "$(SolutionDir)copyDLL.py" "$(TargetPath)"
-) else (
-    echo Python not found, skipping copyDLL.py
-)
-exit /b 0</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -92,47 +73,49 @@ exit /b 0</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>RIVET_LIB_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_NAME="$(TargetName).dll";RIVET_DOORSTOP_EXPORTS;RIVET_LIB_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\Doorstop\include;$(SolutionDir)src\Core\include;$(SolutionDir)src\Lib\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <DelayLoadDLLs>
-      </DelayLoadDLLs>
+      <OutputFile>$(OutDir)version$(TargetExt)</OutputFile>
+      <ModuleDefinitionFile>src\proxy.def</ModuleDefinitionFile>
     </Link>
-    <PostBuildEvent>
-      <Command>where python &gt;nul 2&gt;nul
-if %ERRORLEVEL%==0 (
-    python "$(SolutionDir)copyDLL.py" "$(TargetPath)"
-) else (
-    echo Python not found, skipping copyDLL.py
-)
-exit /b 0</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="console.cpp" />
-    <ClCompile Include="loaderFlags.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\compat.cpp" />
+    <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\DoorstopFlags.cpp" />
+    <ClCompile Include="src\logger.cpp" />
+    <ClCompile Include="src\LoggerManager.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="console.h" />
-    <ClInclude Include="loaderFlags.h" />
-    <ClInclude Include="state.h" />
+    <MASM Include="src\proxy.asm">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Makefile</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </MASM>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Doorstop\Doorstop.vcxproj">
-      <Project>{adc9313d-d3da-4795-b621-8357689176c0}</Project>
-    </ProjectReference>
+    <None Include="src\proxy.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\compat.h" />
+    <ClInclude Include="include\console.h" />
+    <ClInclude Include="include\DoorstopFlags.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
       <Project>{a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

@@ -3,53 +3,42 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Doorstop", "Doorstop\Doorstop.vcxproj", "{ADC9313D-D3DA-4795-B621-8357689176C0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Doorstop", "src\Doorstop\Doorstop.vcxproj", "{ADC9313D-D3DA-4795-B621-8357689176C0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader\Loader.vcxproj", "{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "src\Loader\Loader.vcxproj", "{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lib", "Lib\Lib.vcxproj", "{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lib", "src\Lib\Lib.vcxproj", "{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleMod", "SampleMod\SampleMod.vcxproj", "{E445DF49-B499-435D-81C7-DF32E298137B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleMod", "src\SampleMod\SampleMod.vcxproj", "{E445DF49-B499-435D-81C7-DF32E298137B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "src\Core\Core.vcxproj", "{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
-		ReleaseAutoCopy|x64 = ReleaseAutoCopy|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{ADC9313D-D3DA-4795-B621-8357689176C0}.Debug|x64.ActiveCfg = Debug|x64
 		{ADC9313D-D3DA-4795-B621-8357689176C0}.Debug|x64.Build.0 = Debug|x64
 		{ADC9313D-D3DA-4795-B621-8357689176C0}.Release|x64.ActiveCfg = Release|x64
 		{ADC9313D-D3DA-4795-B621-8357689176C0}.Release|x64.Build.0 = Release|x64
-		{ADC9313D-D3DA-4795-B621-8357689176C0}.ReleaseAutoCopy|x64.ActiveCfg = ReleaseAutoCopy|x64
-		{ADC9313D-D3DA-4795-B621-8357689176C0}.ReleaseAutoCopy|x64.Build.0 = ReleaseAutoCopy|x64
 		{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}.Debug|x64.ActiveCfg = Debug|x64
 		{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}.Debug|x64.Build.0 = Debug|x64
 		{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}.Release|x64.ActiveCfg = Release|x64
 		{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}.Release|x64.Build.0 = Release|x64
-		{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}.ReleaseAutoCopy|x64.ActiveCfg = Release|x64
-		{E339D19C-FBDA-4C9A-BD27-C814FAB7D74A}.ReleaseAutoCopy|x64.Build.0 = Release|x64
 		{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}.Debug|x64.ActiveCfg = Debug|x64
 		{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}.Debug|x64.Build.0 = Debug|x64
 		{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}.Release|x64.ActiveCfg = Release|x64
 		{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}.Release|x64.Build.0 = Release|x64
-		{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}.ReleaseAutoCopy|x64.ActiveCfg = Release|x64
-		{FAA2D82A-3276-4A42-9EEB-ADB2AE7603F8}.ReleaseAutoCopy|x64.Build.0 = Release|x64
 		{E445DF49-B499-435D-81C7-DF32E298137B}.Debug|x64.ActiveCfg = Debug|x64
 		{E445DF49-B499-435D-81C7-DF32E298137B}.Debug|x64.Build.0 = Debug|x64
 		{E445DF49-B499-435D-81C7-DF32E298137B}.Release|x64.ActiveCfg = Release|x64
 		{E445DF49-B499-435D-81C7-DF32E298137B}.Release|x64.Build.0 = Release|x64
-		{E445DF49-B499-435D-81C7-DF32E298137B}.ReleaseAutoCopy|x64.ActiveCfg = Release|x64
-		{E445DF49-B499-435D-81C7-DF32E298137B}.ReleaseAutoCopy|x64.Build.0 = Release|x64
 		{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}.Debug|x64.ActiveCfg = Debug|x64
 		{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}.Debug|x64.Build.0 = Debug|x64
 		{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}.Release|x64.ActiveCfg = Release|x64
 		{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}.Release|x64.Build.0 = Release|x64
-		{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}.ReleaseAutoCopy|x64.ActiveCfg = Release|x64
-		{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}.ReleaseAutoCopy|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

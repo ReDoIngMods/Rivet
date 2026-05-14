@@ -1,4 +1,4 @@
-#include "loaderFlags.h"
+#include "LoaderFlags.h"
 #include "state.h"
 #include "console.h"
 
