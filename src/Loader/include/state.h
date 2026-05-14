@@ -16,20 +16,11 @@ public:
 		loadedMods_.push_back(modDef);
 	}
 
-	void AddModInstance(IMod* modInstance) {
-		modInstances_.push_back(modInstance);
-	}
-
 	const std::vector<ModDef>& GetLoadedMods() const {
 		return loadedMods_;
 	}
 
-	const std::vector<IMod*>& GetModInstances() const {
-		return modInstances_;
-	}
-
 private:
 	std::vector<ModDef> loadedMods_;
-	std::vector<IMod*> modInstances_;
 };
 } // namespace Rivet

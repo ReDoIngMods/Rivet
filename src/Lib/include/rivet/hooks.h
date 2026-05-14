@@ -32,7 +32,7 @@ inline FARPROC ResolveExport(const char* name) {
 // identify your mod and is shown in conflict diagnostics.
 //
 // Stage 1: at most one detour per target. Chaining (multiple subscribers on
-// the same address) is not yet supported — coordinate via Rivet events when
+// the same address) is not yet supported. Coordinate via Rivet events when
 // they ship, or via mod-to-mod conventions for now.
 inline Handle Install(void* target, void* detour, void** origOut, const char* ownerName) {
 	static auto fn = reinterpret_cast<detail::InstallFn>(detail::ResolveExport("Rivet_HookInstall"));

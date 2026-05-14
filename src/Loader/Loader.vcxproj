@@ -98,12 +98,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\Events.cpp" />
     <ClCompile Include="src\Hooks.cpp" />
     <ClCompile Include="src\LoaderFlags.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\console.h" />
+    <ClInclude Include="include\Events.h" />
     <ClInclude Include="include\Hooks.h" />
     <ClInclude Include="include\LoaderFlags.h" />
     <ClInclude Include="include\state.h" />

@@ -11,7 +11,7 @@ using HookHandle = std::uintptr_t;
 
 // HookManager owns every MinHook trampoline in the process. Mods reach it via
 // the C ABI exported from RivetLoader.dll (see Rivet_Hook* in Hooks.cpp); the
-// Loader itself uses it directly. Stage 1: ownership tracking only — at most
+// Loader itself uses it directly. Stage 1: ownership tracking only, at most
 // one detour per target. A second Install attempt on an already-hooked target
 // returns 0 and the caller can read the existing owner via GetOwner().
 class HookManager {

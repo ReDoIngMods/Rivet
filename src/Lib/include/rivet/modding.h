@@ -1,6 +1,8 @@
 #pragma once
 
-#include <rivet/imod.h>
 #include <rivet/moddef.h>
+#include <rivet/events.h>
+#include <rivet/events_builtin.h>
+#include <rivet/hooks.h>
 
 #include "macros.h"

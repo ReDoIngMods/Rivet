@@ -4,6 +4,8 @@
 #include "Hooks.h"
 
 #include <rivet/moddef.h>
+#include <rivet/events.h>
+#include <rivet/events_builtin.h>
 
 #include <MinHook.h>
 
@@ -39,12 +41,12 @@ static void HandleMod(fs::path modPath) {
 		return;
 	}
 
-	Rivet::IMod* modInstance = modDef.create();
 	CONSOLE_INFO("Loaded mod: %s by %s", modDef.getName(), modDef.getAuthor());
 
-	auto& state = Rivet::LoaderState::GetInstance();
-	state.AddMod(modDef);
-	state.AddModInstance(modInstance);
+	if (modDef.entry) {
+		modDef.entry();
+	}
+	Rivet::LoaderState::GetInstance().AddMod(modDef);
 }
 
 // envMode: 1 = terrain VM, 0 = main game VM. 32-bit boolean in the game's ABI.
@@ -55,19 +57,14 @@ static LuaVM_Initialize_t oLuaVM_Initialize = nullptr;
 
 static void* hk_LuaVM_Initialize(lua_State** pL, void** modOpenerLists, int envMode) {
 	const bool isTerrain = envMode != 0;
-	auto& state = Rivet::LoaderState::GetInstance();
 
 	lua_State* L = pL ? *pL : nullptr;
-	for (auto* modInstance : state.GetModInstances()) {
-		modInstance->OnLuaInitialize(L, isTerrain);
-	}
+	Rivet::Events::Publish(Rivet::BuiltinEvents::LuaInitializing{L, isTerrain});
 
 	void* result = oLuaVM_Initialize(pL, modOpenerLists, envMode);
 
 	L = pL ? *pL : nullptr;
-	for (auto* modInstance : state.GetModInstances()) {
-		modInstance->OnLuaPostInitialize(L, isTerrain);
-	}
+	Rivet::Events::Publish(Rivet::BuiltinEvents::LuaInitialized{L, isTerrain});
 
 	return result;
 }
@@ -109,9 +106,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	const auto& loadedMods = loaderState.GetLoadedMods();
 	CONSOLE_INFO("Rivet Loader initialized. %zu mods loaded.", loadedMods.size());
 
-	for (auto* modInstance : loaderState.GetModInstances()) {
-		modInstance->OnRivetInitialize();
-	}
+	Rivet::Events::Publish(Rivet::BuiltinEvents::RivetInitialized{});
 
 	return TRUE;
 }
