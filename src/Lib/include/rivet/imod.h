@@ -1,5 +1,7 @@
 #pragma once
 
+struct lua_State;
+
 namespace Rivet {
 class IMod {
 public:
@@ -31,10 +33,14 @@ public:
 	// This is called from the main render function, be wary of threading issues
 	virtual void OnContraptionPostRender() {}
 
-	// This runs during Lua initialization, allowing you to register your own Lua functions and such
-	virtual void OnLuaInitialize() {}
-	// This runs after Lua initialization, allowing you to interact with the Lua environment after the game has set it up
-	// This one is recommended as `sm` and other important tables will become available by then
-	virtual void OnLuaPostInitialize() {}
+	// This runs just before the game's LuaVM_Initialize, allowing you to register your own Lua functions and such.
+	// isTerrain is true when the VM being initialized is the terrain VM; false for the main game VM.
+	// L may be null at this point (the game has not yet populated *pL).
+	virtual void OnLuaInitialize(lua_State* L, bool isTerrain) {}
+	// This runs immediately after the game's LuaVM_Initialize returns, allowing you to interact with the
+	// Lua environment after the game has set it up. Recommended over OnLuaInitialize as `sm` and other
+	// important tables will become available by then.
+	// isTerrain is true when the VM being initialized is the terrain VM; false for the main game VM.
+	virtual void OnLuaPostInitialize(lua_State* L, bool isTerrain) {}
 };
 }; // namespace Rivet

@@ -24,6 +24,10 @@ public:
 		return loadedMods_;
 	}
 
+	const std::vector<IMod*>& GetModInstances() const {
+		return modInstances_;
+	}
+
 private:
 	std::vector<ModDef> loadedMods_;
 	std::vector<IMod*> modInstances_;
