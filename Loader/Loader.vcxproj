@@ -116,12 +116,12 @@ exit /b 0</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="console.cpp" />
-    <ClCompile Include="loader_flags.cpp" />
+    <ClCompile Include="loaderFlags.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h" />
-    <ClInclude Include="loader_flags.h" />
+    <ClInclude Include="loaderFlags.h" />
     <ClInclude Include="state.h" />
   </ItemGroup>
   <ItemGroup>

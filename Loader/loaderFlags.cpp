@@ -1,4 +1,4 @@
-#include "loader_flags.h"
+#include "loaderFlags.h"
 
 #include "cli.h"
 #include "config.h"
@@ -10,7 +10,7 @@ LoaderFlags LoaderFlags::Load() {
 	CLI cli;
 	LoaderFlags flags;
 
-	flags.directory = cli.getValue<std::string>("rivetDirectory", loaderConfig.getValue<std::string>("directory", "Mods"));
+	flags.directory = cli.GetValue<std::string>("rivetDirectory", loaderConfig.GetValue<std::string>("directory", "Mods"));
 
 	return flags;
 }

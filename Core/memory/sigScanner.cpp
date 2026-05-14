@@ -1,5 +1,5 @@
-#include <rivet/memory/sigscanner.h>
-#include <rivet/memory/peheaders.hpp>
+#include <rivet/memory/sigScanner.h>
+#include <rivet/memory/peHeaders.h>
 
 #include <sstream>
 #include <mutex>
@@ -7,21 +7,21 @@
 using namespace Rivet;
 
 namespace {
-	std::unordered_map<size_t, DWORD64> SignatureCache;
-	std::mutex SignatureCacheMutex;
+std::unordered_map<size_t, DWORD64> SignatureCache;
+std::mutex SignatureCacheMutex;
 
-	size_t HashPattern(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask) {
-		size_t hash = 0xcbf29ce484222325; // FNV-1a offset basis
+size_t HashPattern(const std::vector<uint8_t>& bytes, const std::vector<uint8_t>& mask) {
+	size_t hash = 0xcbf29ce484222325; // FNV-1a offset basis
 
-		for (size_t index = 0; index < bytes.size(); ++index) {
-			uint8_t b = mask[index] ? 0xFF : bytes[index];
-			hash ^= b;
-			hash *= 0x100000001b3; // FNV prime
-		}
-
-		return hash;
+	for (size_t index = 0; index < bytes.size(); ++index) {
+		uint8_t b = mask[index] ? 0xFF : bytes[index];
+		hash ^= b;
+		hash *= 0x100000001b3; // FNV prime
 	}
+
+	return hash;
 }
+} // namespace
 
 RIVET_LIB_API SignatureScanner::SignatureScanner(const std::string& moduleName) {
 	PEHeaderManager& peHeaderMgr = PEHeaderManager::GetInstance();

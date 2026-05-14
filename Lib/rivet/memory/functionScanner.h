@@ -1,0 +1,27 @@
+#pragma once
+#include <Windows.h>
+#include <string>
+#include <vector>
+
+#include "../defines.h"
+
+namespace Rivet {
+struct FunctionData {
+	DWORD64 startAddress;
+	DWORD64 endAddress;
+};
+
+class FunctionScanner {
+public:
+	RIVET_LIB_API ~FunctionScanner() = default;
+	RIVET_LIB_API explicit FunctionScanner(std::string_view moduleName);
+
+	RIVET_LIB_API std::vector<FunctionData> GetFunctions() const;
+
+private:
+	void Scan() const;
+
+	DWORD64 startAddress_ = 0;
+	DWORD64 endAddress_ = 0;
+};
+} // namespace Rivet

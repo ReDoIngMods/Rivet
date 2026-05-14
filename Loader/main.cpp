@@ -1,4 +1,4 @@
-#include "loader_flags.h"
+#include "loaderFlags.h"
 #include "state.h"
 #include "console.h"
 
@@ -8,9 +8,9 @@
 
 static Rivet::LoaderState& loaderState = Rivet::LoaderState::GetInstance();
 
-bool getRivetEnabled(HMODULE hMod, Rivet::ModDef& outModDef) {
+bool GetRivetEnabled(HMODULE hMod, Rivet::ModDef& outModDef) {
 	// Look for `GET_RIVET_MOD_DEF` export
-	auto getModDefFunc = reinterpret_cast<Rivet::ModDef(*)()>(GetProcAddress(hMod, "GET_RIVET_MOD_DEF"));
+	auto getModDefFunc = reinterpret_cast<Rivet::ModDef (*)()>(GetProcAddress(hMod, "GET_RIVET_MOD_DEF"));
 	if (!getModDefFunc) {
 		return false;
 	}
@@ -19,7 +19,7 @@ bool getRivetEnabled(HMODULE hMod, Rivet::ModDef& outModDef) {
 	return true;
 }
 
-static void handleMod(fs::path modPath) {
+static void HandleMod(fs::path modPath) {
 	// Check if file ends in .old, if it does, it's been disabled and we skip it
 	if (modPath.extension() == ".old") {
 		CONSOLE_INFO("Mod %s is disabled (ends with .old), skipping.", modPath.filename().string());
@@ -33,7 +33,7 @@ static void handleMod(fs::path modPath) {
 	}
 
 	Rivet::ModDef modDef;
-	if (!getRivetEnabled(hMod, modDef)) {
+	if (!GetRivetEnabled(hMod, modDef)) {
 		CONSOLE_WARN("DLL is not a valid Rivet mod: %s. No extra steps will be taken, it will run its course as a normal DLL.", modPath.string().c_str());
 		return;
 	}
@@ -41,7 +41,7 @@ static void handleMod(fs::path modPath) {
 	Rivet::IMod* modInstance = modDef.create();
 	CONSOLE_INFO("Loaded mod: %s by %s", modDef.getName(), modDef.getAuthor());
 
-	Rivet::LoaderState::GetInstance().addMod(modDef);
+	Rivet::LoaderState::GetInstance().AddMod(modDef);
 }
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
@@ -63,19 +63,19 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	} else {
 		for (const auto& entry : fs::recursive_directory_iterator(modsDir)) {
 			if (entry.is_regular_file() && entry.path().extension() == ".dll") {
-				handleMod(entry.path());
+				HandleMod(entry.path());
 			}
 		}
 	}
 
-	auto& loadedMods = loaderState.getLoadedMods();
+	auto& loadedMods = loaderState.GetLoadedMods();
 	CONSOLE_INFO("Rivet Loader initialized. %zu mods loaded.", loadedMods.size());
 
 	for (const auto& modDef : loadedMods) {
 		Rivet::IMod* modInstance = modDef.create();
 		modInstance->OnRivetInitialize();
 
-		loaderState.addMod(modDef);
+		loaderState.AddMod(modDef);
 	}
 
 	return TRUE;

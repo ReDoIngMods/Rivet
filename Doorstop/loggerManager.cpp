@@ -1,63 +1,63 @@
 #include <rivet/logging.h>
-#include "doorstop_flags.h"
+#include "doorstopFlags.h"
 
 // Helper class
 enum class ConsoleColor : WORD {
-    Black = 0,
-    Blue = FOREGROUND_BLUE,
-    Green = FOREGROUND_GREEN,
-    Cyan = FOREGROUND_GREEN | FOREGROUND_BLUE,
-    Red = FOREGROUND_RED,
-    Magenta = FOREGROUND_RED | FOREGROUND_BLUE,
-    Yellow = FOREGROUND_RED | FOREGROUND_GREEN,
-    White = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
-    Gray = FOREGROUND_INTENSITY,
-    BrightBlue = FOREGROUND_BLUE | FOREGROUND_INTENSITY,
-    BrightGreen = FOREGROUND_GREEN | FOREGROUND_INTENSITY,
-    BrightCyan = FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
-    BrightRed = FOREGROUND_RED | FOREGROUND_INTENSITY,
-    BrightMagenta = FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
-    BrightYellow = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY,
-    BrightWhite = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
+	Black = 0,
+	Blue = FOREGROUND_BLUE,
+	Green = FOREGROUND_GREEN,
+	Cyan = FOREGROUND_GREEN | FOREGROUND_BLUE,
+	Red = FOREGROUND_RED,
+	Magenta = FOREGROUND_RED | FOREGROUND_BLUE,
+	Yellow = FOREGROUND_RED | FOREGROUND_GREEN,
+	White = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
+	Gray = FOREGROUND_INTENSITY,
+	BrightBlue = FOREGROUND_BLUE | FOREGROUND_INTENSITY,
+	BrightGreen = FOREGROUND_GREEN | FOREGROUND_INTENSITY,
+	BrightCyan = FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
+	BrightRed = FOREGROUND_RED | FOREGROUND_INTENSITY,
+	BrightMagenta = FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
+	BrightYellow = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY,
+	BrightWhite = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
 };
 
 inline static bool VFormatBuffer(Rivet::LoggerManager::Buffer& buffer, const std::string_view& format, va_list args) {
-    va_list args2;
-    va_copy(args2, args);
-    int size = vsnprintf(nullptr, 0, format.data(), args2);
-    va_end(args2);
+	va_list args2;
+	va_copy(args2, args);
+	int size = vsnprintf(nullptr, 0, format.data(), args2);
+	va_end(args2);
 
-    if (size < 0)
-        return false;
+	if (size < 0)
+		return false;
 
-    if (size >= buffer.size) {
-        delete[] buffer.buffer;
-        buffer.size = size + 1;
-        buffer.buffer = new char[buffer.size];
-    }
+	if (size >= buffer.size) {
+		delete[] buffer.buffer;
+		buffer.size = size + 1;
+		buffer.buffer = new char[buffer.size];
+	}
 
-    vsnprintf(buffer.buffer, buffer.size, format.data(), args);
-    return true;
+	vsnprintf(buffer.buffer, buffer.size, format.data(), args);
+	return true;
 }
 
 inline static bool FormatBuffer(Rivet::LoggerManager::Buffer& buffer, const std::string_view format, ...) {
-    va_list args;
-    va_start(args, format);
+	va_list args;
+	va_start(args, format);
 
-    bool result = VFormatBuffer(buffer, format, args);
+	bool result = VFormatBuffer(buffer, format, args);
 
-    va_end(args);
-    return result;
+	va_end(args);
+	return result;
 }
 
 Rivet::LoggerManager::LoggerManager() {
-    formatBuffer_.size = 0xFF + 1;
-    formatBuffer_.buffer = new char[formatBuffer_.size];
+	formatBuffer_.size = 0xFF + 1;
+	formatBuffer_.buffer = new char[formatBuffer_.size];
 
-    logBuffer_.size = 0xFF + 1;
-    logBuffer_.buffer = new char[logBuffer_.size];
+	logBuffer_.size = 0xFF + 1;
+	logBuffer_.buffer = new char[logBuffer_.size];
 
-    DoorstopFlags flags = DoorstopFlags::Load();
+	DoorstopFlags flags = DoorstopFlags::Load();
 
 	if (!flags.hideConsole) {
 		AllocConsole();
@@ -68,26 +68,26 @@ Rivet::LoggerManager::LoggerManager() {
 	}
 
 	// Open log file if specified
-    if (!flags.log.empty()) {
-        hFileOut_ = CreateFileA(flags.log.c_str(), GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
-        if (hFileOut_ != INVALID_HANDLE_VALUE) {
-            SetFilePointer(hFileOut_, 0, nullptr, FILE_END);
+	if (!flags.log.empty()) {
+		hFileOut_ = CreateFileA(flags.log.c_str(), GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+		if (hFileOut_ != INVALID_HANDLE_VALUE) {
+			SetFilePointer(hFileOut_, 0, nullptr, FILE_END);
 		}
-    }
+	}
 
-    SendRawLog(LogLevel::Info, "LoggerManager", "Initialized Console!", nullptr);
+	SendRawLog(LogLevel::Info, "LoggerManager", "Initialized Console!", nullptr);
 }
 
 Rivet::LoggerManager::~LoggerManager() {
-    if (logBuffer_.buffer) {
-        delete[] logBuffer_.buffer;
-        logBuffer_.buffer = nullptr;
-    }
+	if (logBuffer_.buffer) {
+		delete[] logBuffer_.buffer;
+		logBuffer_.buffer = nullptr;
+	}
 
-    if (formatBuffer_.buffer) {
-        delete[] formatBuffer_.buffer;
-        formatBuffer_.buffer = nullptr;
-    }
+	if (formatBuffer_.buffer) {
+		delete[] formatBuffer_.buffer;
+		formatBuffer_.buffer = nullptr;
+	}
 }
 
 RIVET_DOORSTOP_API Rivet::Logger* Rivet::LoggerManager::GetLogger(std::string_view name) {
@@ -104,46 +104,46 @@ RIVET_DOORSTOP_API Rivet::Logger* Rivet::LoggerManager::GetLogger(std::string_vi
 
 void Rivet::LoggerManager::SendRawLog(LogLevel logLevel, std::string_view loggerName, std::string_view format, va_list arguments) {
 	const char* levelStr = nullptr;
-    ConsoleColor color = ConsoleColor::White;
+	ConsoleColor color = ConsoleColor::White;
 
-    switch (logLevel) {
-    case LogLevel::Info:
-        levelStr = "[ INFO ]: ";
-        color = ConsoleColor::BrightGreen;
-        break;
-    case LogLevel::Warning:
-        levelStr = "[ WARN ]: ";
-        color = ConsoleColor::BrightYellow;
-        break;
-    case LogLevel::Error:
-        levelStr = "[ ERROR ]: ";
-        color = ConsoleColor::BrightRed;
-        break;
-    case LogLevel::Debug:
-        levelStr = "[ DEBUG ]: ";
-        color = ConsoleColor::BrightMagenta;
-        break;
-    }
+	switch (logLevel) {
+	case LogLevel::Info:
+		levelStr = "[ INFO ]: ";
+		color = ConsoleColor::BrightGreen;
+		break;
+	case LogLevel::Warning:
+		levelStr = "[ WARN ]: ";
+		color = ConsoleColor::BrightYellow;
+		break;
+	case LogLevel::Error:
+		levelStr = "[ ERROR ]: ";
+		color = ConsoleColor::BrightRed;
+		break;
+	case LogLevel::Debug:
+		levelStr = "[ DEBUG ]: ";
+		color = ConsoleColor::BrightMagenta;
+		break;
+	}
 
-    time_t epochTime;
-    time(&epochTime);
-    struct tm curTime;
-    localtime_s(&curTime, &epochTime);
+	time_t epochTime;
+	time(&epochTime);
+	struct tm curTime;
+	localtime_s(&curTime, &epochTime);
 
-    constexpr const char* logFormat = "%02d:%02d:%02d %s %s%s\n";
+	constexpr const char* logFormat = "%02d:%02d:%02d %s %s%s\n";
 
 	std::lock_guard<std::mutex> lock(consoleMutex_);
 
-    VFormatBuffer(formatBuffer_, format, arguments);
-    FormatBuffer(logBuffer_, logFormat, curTime.tm_hour, curTime.tm_min, curTime.tm_sec, loggerName.data(), levelStr, formatBuffer_.buffer);
+	VFormatBuffer(formatBuffer_, format, arguments);
+	FormatBuffer(logBuffer_, logFormat, curTime.tm_hour, curTime.tm_min, curTime.tm_sec, loggerName.data(), levelStr, formatBuffer_.buffer);
 
-    SetConsoleTextAttribute(hStdOut_, static_cast<WORD>(color));
+	SetConsoleTextAttribute(hStdOut_, static_cast<WORD>(color));
 
-    DWORD written = 0;
-    WriteConsoleA(hStdOut_, logBuffer_.buffer, static_cast<DWORD>(strlen(logBuffer_.buffer)), &written, nullptr);
+	DWORD written = 0;
+	WriteConsoleA(hStdOut_, logBuffer_.buffer, static_cast<DWORD>(strlen(logBuffer_.buffer)), &written, nullptr);
 
-    if (hFileOut_ != INVALID_HANDLE_VALUE) {
-        DWORD bytesWritten = 0;
-        WriteFile(hFileOut_, logBuffer_.buffer, static_cast<DWORD>(strlen(logBuffer_.buffer)), &bytesWritten, nullptr);
+	if (hFileOut_ != INVALID_HANDLE_VALUE) {
+		DWORD bytesWritten = 0;
+		WriteFile(hFileOut_, logBuffer_.buffer, static_cast<DWORD>(strlen(logBuffer_.buffer)), &bytesWritten, nullptr);
 	}
 }

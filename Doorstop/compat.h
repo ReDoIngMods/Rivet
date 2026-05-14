@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Rivet::Compat {
-	void InitializeFunctionPointers();
-	void PatchAllocConsole();
-	void Initialize();
-}
+void InitializeFunctionPointers();
+void PatchAllocConsole();
+void Initialize();
+} // namespace Rivet::Compat

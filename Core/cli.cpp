@@ -6,9 +6,9 @@ CLI::CLI() {
 	auto args = GetCommandLineArgs();
 
 	for (size_t i = 1; i < args.size(); ++i) {
-		if (args[i].rfind("-", 0) == 0) { // starts with '-'
+		if (args[i].rfind("-", 0) == 0) {        // starts with '-'
 			std::string arg = args[i].substr(1); // remove the '-'
-			std::string key, value = "true"; // default for flags
+			std::string key, value = "true";     // default for flags
 
 			// Check if arg contains '='
 			size_t eqPos = arg.find('=');
@@ -16,8 +16,7 @@ CLI::CLI() {
 				// Format: -key=value
 				key = arg.substr(0, eqPos);
 				value = arg.substr(eqPos + 1);
-			}
-			else {
+			} else {
 				// Format: -key (flag) or -key value (next arg is value)
 				key = arg;
 				// Check if next argument exists and is not a flag
@@ -31,7 +30,7 @@ CLI::CLI() {
 	}
 }
 
-std::optional<std::string> CLI::getArgValue(const std::string& key) const {
+std::optional<std::string> CLI::GetArgValue(const std::string& key) const {
 	auto it = argsMap_.find(key);
 	if (it != argsMap_.end()) {
 		return it->second;

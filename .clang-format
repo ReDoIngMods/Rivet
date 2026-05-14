@@ -1,0 +1,37 @@
+# Rivet C++ style.
+---
+Language: Cpp
+BasedOnStyle: Microsoft
+
+UseTab: ForIndentation
+TabWidth: 4
+IndentWidth: 4
+ColumnLimit: 0
+
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+
+NamespaceIndentation: None
+AccessModifierOffset: -4
+EmptyLineBeforeAccessModifier: LogicalBlock
+FixNamespaceComments: true
+
+PointerAlignment: Left
+ReferenceAlignment: Left
+SpaceBeforeParens: ControlStatements
+SpacesBeforeTrailingComments: 1
+
+IncludeBlocks: Preserve
+SortIncludes: Never
+
+AllowAllArgumentsOnNextLine: true
+BinPackArguments: true
+BinPackParameters: true
+
+Cpp11BracedListStyle: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1

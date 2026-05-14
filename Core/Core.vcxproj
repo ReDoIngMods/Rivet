@@ -100,9 +100,9 @@
   <ItemGroup>
     <ClCompile Include="cli.cpp" />
     <ClCompile Include="config.cpp" />
-    <ClCompile Include="memory\functionscanner.cpp" />
-    <ClCompile Include="memory\peheaders.cpp" />
-    <ClCompile Include="memory\sigscanner.cpp" />
+    <ClCompile Include="memory\functionScanner.cpp" />
+    <ClCompile Include="memory\peHeaders.cpp" />
+    <ClCompile Include="memory\sigScanner.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

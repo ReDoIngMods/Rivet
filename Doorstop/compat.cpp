@@ -6,33 +6,33 @@
 using namespace Rivet;
 
 #define GET_INDEX(name) \
-			(static_cast<size_t>(std::distance(std::begin(names), std::find(std::begin(names), std::end(names), name))))
+	(static_cast<size_t>(std::distance(std::begin(names), std::find(std::begin(names), std::end(names), name))))
 #define GET_FUNC_PTR(name) \
-			fnPtrs[GET_INDEX(__func__)]
+	fnPtrs[GET_INDEX(__func__)]
 #define CALL_FUNC(name, ...) \
-			reinterpret_cast<decltype(name)*>(GET_FUNC_PTR(__func__))(__VA_ARGS__)
+	reinterpret_cast<decltype(name)*>(GET_FUNC_PTR(__func__))(__VA_ARGS__)
 #define EXPORT __declspec(dllexport)
 #define FASTCALL __fastcall
 #define STDCALL __stdcall
 #define GET_REAL_FUNC_PTR(name) \
-    P##name = reinterpret_cast<PVOID>(GetProcAddress(hModule, #name))
+	P##name = reinterpret_cast<PVOID>(GetProcAddress(hModule, #name))
 
 extern "C" {
-	PVOID PGetFileVersionInfoW = nullptr;
-	PVOID PGetFileVersionInfoA = nullptr;
-	PVOID PGetFileVersionInfoSizeW = nullptr;
-	PVOID PVerQueryValueA = nullptr;
-	PVOID PVerQueryValueW = nullptr;
-	PVOID PGetFileVersionInfoByHandle = nullptr;
-	PVOID PGetFileVersionInfoExA = nullptr;
-	PVOID PGetFileVersionInfoExW = nullptr;
-	PVOID PGetFileVersionInfoSizeA = nullptr;
-	PVOID PGetFileVersionInfoSizeExA = nullptr;
-	PVOID PGetFileVersionInfoSizeExW = nullptr;
-	PVOID PVerFindFileA = nullptr;
-	PVOID PVerFindFileW = nullptr;
-	PVOID PVerInstallFileA = nullptr;
-	PVOID PVerInstallFileW = nullptr;
+PVOID PGetFileVersionInfoW = nullptr;
+PVOID PGetFileVersionInfoA = nullptr;
+PVOID PGetFileVersionInfoSizeW = nullptr;
+PVOID PVerQueryValueA = nullptr;
+PVOID PVerQueryValueW = nullptr;
+PVOID PGetFileVersionInfoByHandle = nullptr;
+PVOID PGetFileVersionInfoExA = nullptr;
+PVOID PGetFileVersionInfoExW = nullptr;
+PVOID PGetFileVersionInfoSizeA = nullptr;
+PVOID PGetFileVersionInfoSizeExA = nullptr;
+PVOID PGetFileVersionInfoSizeExW = nullptr;
+PVOID PVerFindFileA = nullptr;
+PVOID PVerFindFileW = nullptr;
+PVOID PVerInstallFileA = nullptr;
+PVOID PVerInstallFileW = nullptr;
 }
 
 void Compat::InitializeFunctionPointers() {

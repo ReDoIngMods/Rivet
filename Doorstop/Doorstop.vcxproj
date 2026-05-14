@@ -142,7 +142,7 @@ exit /b 0</Command>
   <ItemGroup>
     <ClCompile Include="compat.cpp" />
     <ClCompile Include="console.cpp" />
-    <ClCompile Include="doorstop_flags.cpp" />
+    <ClCompile Include="doorstopFlags.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="loggerManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -161,7 +161,7 @@ exit /b 0</Command>
   <ItemGroup>
     <ClInclude Include="compat.h" />
     <ClInclude Include="console.h" />
-    <ClInclude Include="doorstop_flags.h" />
+    <ClInclude Include="doorstopFlags.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">

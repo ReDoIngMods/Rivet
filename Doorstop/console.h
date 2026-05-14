@@ -2,7 +2,7 @@
 #include <rivet/logging.h>
 
 namespace Rivet {
-	extern Logger* GLogger;
+extern Logger* GLogger;
 }
 
 #define CONSOLE_INFO Rivet::GLogger->Info

@@ -120,9 +120,9 @@ exit /b 0</Command>
     <ClInclude Include="rivet\defines.h" />
     <ClInclude Include="rivet\imod.h" />
     <ClInclude Include="rivet\logging.h" />
-    <ClInclude Include="rivet\memory\functionscanner.hpp" />
-    <ClInclude Include="rivet\memory\peheaders.hpp" />
-    <ClInclude Include="rivet\memory\sigscanner.h" />
+    <ClInclude Include="rivet\memory\functionScanner.h" />
+    <ClInclude Include="rivet\memory\peHeaders.h" />
+    <ClInclude Include="rivet\memory\sigScanner.h" />
     <ClInclude Include="rivet\moddef.h" />
     <ClInclude Include="rivet\modding.h" />
   </ItemGroup>
