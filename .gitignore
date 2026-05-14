@@ -4,3 +4,8 @@ x64
 RivetDoorstop.ini
 vcpkg_installed
 .idea
+.scratch/
+.cargo/
+.tools/
+docs/book/
+docs/*.log

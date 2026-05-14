@@ -39,8 +39,8 @@ consteval std::uint64_t Fnv1a(const char* s) {
 }
 
 // Compile-time hash of source_location::function_name() inside this template,
-// which embeds the mangled name of T. Identical across DLL boundaries for the
-// same T, so all participants in the process agree on the type identity.
+// which embeds the compiler's spelling of T. Stable across DLL boundaries
+// when all participants use the same compiler family and formatting rules.
 template <class T>
 consteval std::uint64_t TypeHash() {
 	return Fnv1a(std::source_location::current().function_name());
