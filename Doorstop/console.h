@@ -1,5 +1,5 @@
 #pragma once
-#include "logger.h"
+#include <rivet/logging.h>
 
 namespace Rivet {
 	extern Logger* GLogger;

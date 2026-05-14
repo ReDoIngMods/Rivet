@@ -1,5 +1,4 @@
-#include "logger.h"
-#include "loggerManager.h"
+#include <rivet/logging.h>
 
 using namespace Rivet;
 

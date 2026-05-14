@@ -1,11 +1,11 @@
-#include "peheaders.hpp"
+#include <rivet/memory/peheaders.hpp>
 
 #include <ranges>
 #include <utility>
 
 RIVET_LIB_API std::vector<std::string> Rivet::PEHeaderManager::GetLoadedModuleNames() {
 	std::vector<std::string> output;
-	
+
 	for (const auto& name : this->modules_ | std::views::keys)
 		output.emplace_back(name);
 

@@ -1,5 +1,5 @@
-#include "functionscanner.hpp"
-#include "peheaders.hpp"
+#include <rivet/memory/functionscanner.hpp>
+#include <rivet/memory/peheaders.hpp>
 
 #include <unordered_map>
 #include <algorithm>
@@ -82,7 +82,7 @@ void Rivet::FunctionScanner::Scan() const {
         uint64_t funcEnd = (i + 1 < functionStarts.size()) ? functionStarts[i + 1] : endAddress_;
 
         uint64_t localOffset = funcStart - startAddress_;
-        
+
         while (localOffset < funcEnd - startAddress_) {
             ZydisDecodedInstruction instr;
             if (!ZYAN_SUCCESS(ZydisDecoderDecodeInstruction(&decoder, &ctx, code + localOffset, funcEnd - startAddress_ - localOffset, &instr))) {

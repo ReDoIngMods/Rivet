@@ -1,5 +1,5 @@
-#include "loggerManager.h"
-#include "flags.h"
+#include <rivet/logging.h>
+#include "doorstop_flags.h"
 
 // Helper class
 enum class ConsoleColor : WORD {
@@ -43,7 +43,7 @@ inline static bool VFormatBuffer(Rivet::LoggerManager::Buffer& buffer, const std
 inline static bool FormatBuffer(Rivet::LoggerManager::Buffer& buffer, const std::string_view format, ...) {
     va_list args;
     va_start(args, format);
-    
+
     bool result = VFormatBuffer(buffer, format, args);
 
     va_end(args);
@@ -57,8 +57,7 @@ Rivet::LoggerManager::LoggerManager() {
     logBuffer_.size = 0xFF + 1;
     logBuffer_.buffer = new char[logBuffer_.size];
 
-    Flags genericFlags = Flags::GetFlags();
-    DoorstopFlags& flags = genericFlags.doorstop;
+    DoorstopFlags flags = DoorstopFlags::Load();
 
 	if (!flags.hideConsole) {
 		AllocConsole();
@@ -75,11 +74,11 @@ Rivet::LoggerManager::LoggerManager() {
             SetFilePointer(hFileOut_, 0, nullptr, FILE_END);
 		}
     }
-    
+
     SendRawLog(LogLevel::Info, "LoggerManager", "Initialized Console!", nullptr);
 }
 
-Rivet::LoggerManager::~LoggerManager() { 
+Rivet::LoggerManager::~LoggerManager() {
     if (logBuffer_.buffer) {
         delete[] logBuffer_.buffer;
         logBuffer_.buffer = nullptr;
@@ -137,7 +136,7 @@ void Rivet::LoggerManager::SendRawLog(LogLevel logLevel, std::string_view logger
 
     VFormatBuffer(formatBuffer_, format, arguments);
     FormatBuffer(logBuffer_, logFormat, curTime.tm_hour, curTime.tm_min, curTime.tm_sec, loggerName.data(), levelStr, formatBuffer_.buffer);
-    
+
     SetConsoleTextAttribute(hStdOut_, static_cast<WORD>(color));
 
     DWORD written = 0;

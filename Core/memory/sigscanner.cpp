@@ -1,5 +1,5 @@
-#include "sigscanner.h"
-#include "peheaders.hpp"
+#include <rivet/memory/sigscanner.h>
+#include <rivet/memory/peheaders.hpp>
 
 #include <sstream>
 #include <mutex>
@@ -82,7 +82,7 @@ RIVET_LIB_API DWORD64 SignatureScanner::ScanPatternRaw(const std::vector<uint8_t
 
 	uint8_t badCharacters[tableSize];
 	std::fill_n(badCharacters, tableSize, static_cast<uint8_t>(patternSize));
-	
+
 	for (size_t index = 0; index < patternSize - 1; ++index) {
 		if (mask[index])
 			badCharacters[bytes[index]] = static_cast<uint8_t>(patternSize - 1 - index);

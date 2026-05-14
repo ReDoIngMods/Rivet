@@ -1,9 +1,7 @@
 /// Rivet Doorstop is a native code injection library for Scrap Mechanic.
 
-#include "flags.h"
+#include "doorstop_flags.h"
 #include "console.h"
-
-#include "loggerManager.h"
 
 #include "compat.h"
 
@@ -11,18 +9,18 @@ BOOL WINAPI DllMain(HINSTANCE, const DWORD fdwReason, LPVOID) {
 	if (fdwReason != DLL_PROCESS_ATTACH)
 		return TRUE;
 
-	auto [doorstop, loader] = Rivet::Flags::GetFlags();
+	Rivet::DoorstopFlags flags = Rivet::DoorstopFlags::Load();
 
 	CONSOLE_INFO("Rivet Doorstop starting...");
 	Rivet::Compat::Initialize();
 	CONSOLE_INFO("Rivet Doorstop initialized.");
 
-	if (!doorstop.enable)
+	if (!flags.enable)
 		return TRUE;
 
 	// Resolve to full path
 	char fullTarget[MAX_PATH];
-	GetFullPathNameA(doorstop.target.c_str(), MAX_PATH, fullTarget, nullptr);
+	GetFullPathNameA(flags.target.c_str(), MAX_PATH, fullTarget, nullptr);
 	CONSOLE_INFO("Loading target DLL: %s", fullTarget);
 
 	if (!LoadLibraryA(fullTarget)) {

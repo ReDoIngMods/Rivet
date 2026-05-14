@@ -1,6 +1,4 @@
-#include "includes.h"
-
-#include "flags.h"
+#include "loader_flags.h"
 #include "state.h"
 #include "console.h"
 
@@ -50,8 +48,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	if (fdwReason != DLL_PROCESS_ATTACH)
 		return TRUE;
 
-	Rivet::Flags genericFlags = Rivet::Flags::GetFlags();
-	Rivet::LoaderFlags& flags = genericFlags.loader;
+	Rivet::LoaderFlags flags = Rivet::LoaderFlags::Load();
 
 	CONSOLE_INFO("Rivet Loader starting...");
 
@@ -77,7 +74,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	for (const auto& modDef : loadedMods) {
 		Rivet::IMod* modInstance = modDef.create();
 		modInstance->OnRivetInitialize();
-		
+
 		loaderState.addMod(modDef);
 	}
 
