@@ -1,6 +1,7 @@
 #include "LoaderFlags.h"
 #include "state.h"
 #include "console.h"
+#include "Hooks.h"
 
 #include <rivet/moddef.h>
 
@@ -86,11 +87,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 
 	{
 		const auto base = reinterpret_cast<std::uintptr_t>(GetModuleHandleA(nullptr));
-		auto* target = reinterpret_cast<LPVOID>(base + LuaVM_Initialize_RVA);
-		if (MH_CreateHook(target, &hk_LuaVM_Initialize, reinterpret_cast<LPVOID*>(&oLuaVM_Initialize)) != MH_OK) {
-			CONSOLE_ERROR("Failed to create LuaVM_Initialize hook.");
-		} else if (MH_EnableHook(target) != MH_OK) {
-			CONSOLE_ERROR("Failed to enable LuaVM_Initialize hook.");
+		auto* target = reinterpret_cast<void*>(base + LuaVM_Initialize_RVA);
+		if (!Rivet::HookManager::GetInstance().Install(
+				target, &hk_LuaVM_Initialize,
+				reinterpret_cast<void**>(&oLuaVM_Initialize), "Rivet")) {
+			CONSOLE_ERROR("Failed to install LuaVM_Initialize hook.");
 		}
 	}
 
