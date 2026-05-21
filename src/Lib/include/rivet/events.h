@@ -5,6 +5,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <psapi.h>
 
 namespace Rivet::Events {
 
@@ -20,8 +21,27 @@ using SubscribeFn = Handle (*)(EventId id, TypeErasedCallback fn, void* user);
 using UnsubscribeFn = bool (*)(Handle handle);
 using PublishFn = void (*)(EventId id, const void* payload);
 
+// The Loader DLL is whichever module exports Rivet_EventRegisterType. We can't
+// hardcode a filename because r2modman (and other launchers) rename the binary
+// on install, so GetModuleHandleA("RivetLoader.dll") returns NULL whenever the
+// loader is shipped as Loader.dll or anything else.
+inline HMODULE FindLoaderModule() {
+	HMODULE mods[1024];
+	DWORD needed = 0;
+	if (!EnumProcessModules(GetCurrentProcess(), mods, sizeof(mods), &needed)) {
+		return nullptr;
+	}
+	const DWORD count = needed / sizeof(HMODULE);
+	for (DWORD i = 0; i < count; ++i) {
+		if (GetProcAddress(mods[i], "Rivet_EventRegisterType")) {
+			return mods[i];
+		}
+	}
+	return nullptr;
+}
+
 inline FARPROC ResolveExport(const char* name) {
-	static HMODULE mod = GetModuleHandleA("RivetLoader.dll");
+	static HMODULE mod = FindLoaderModule();
 	if (!mod) {
 		return nullptr;
 	}
