@@ -8,8 +8,8 @@ static void OnRivetInitialized(const Rivet::BuiltinEvents::RivetInitialized&) {
 
 static void OnLuaInitialized(const Rivet::BuiltinEvents::LuaInitialized& e) {
 	MessageBoxA(nullptr,
-		e.isTerrain ? "SampleMod: terrain Lua VM ready" : "SampleMod: game Lua VM ready",
-		"SampleMod", MB_OK);
+	            e.isTerrain ? "SampleMod: terrain Lua VM ready" : "SampleMod: game Lua VM ready",
+	            "SampleMod", MB_OK);
 }
 
 static void SampleModEntry() {
@@ -17,4 +17,4 @@ static void SampleModEntry() {
 	Rivet::Events::Subscribe<Rivet::BuiltinEvents::LuaInitialized>(&OnLuaInitialized);
 }
 
-RIVET_REGISTER_MOD(SampleModEntry, "Sample Author", "Sample Mod")
+RIVET_REGISTER_MOD(SampleModEntry)

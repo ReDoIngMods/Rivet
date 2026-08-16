@@ -1,11 +1,11 @@
 # Introduction
 
-Rivet is a modding framework. It loads your DLL into a target game and gives mods a coordinated way to hook engine functions and exchange events with each other.
+Rivet is a native mod loader. It loads Thunderstore-style packages into the target game, resolves their dependencies, and gives mods an optional coordinated way to hook engine functions and exchange events.
 
 It is made up of three parts that work together:
 
 - **RivetDoorstop** is a `version.dll` proxy. The game loads it instead of the real Windows `version.dll`, and Doorstop in turn loads Rivet (or any other mod loader you point it at). This is the bootstrap step that gets Rivet's code running inside the game process without modifying the game executable.
-- **RivetLoader** is the mod loader. It scans your mods directory, loads each mod DLL, calls its entry function, and runs the event dispatch and hook coordination services that mods rely on.
+- **RivetLoader** is the mod loader. It reads package manifests, resolves dependencies, loads root-level package DLLs, calls exported entrypoints, and runs the optional event dispatch and hook coordination services.
 - **RivetLib** is the header-only library mods include. It exposes `Rivet::Events`, `Rivet::Hooks`, and the `RIVET_REGISTER_MOD` macro. Mods link nothing extra; the headers resolve Rivet's services from the loader at runtime.
 
 When this documentation says "Rivet" without qualification, it means all three together.

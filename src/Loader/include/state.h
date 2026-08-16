@@ -1,10 +1,18 @@
 #pragma once
 
-#include <includes.h>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 #include <rivet/moddef.h>
 
 namespace Rivet {
+struct LoadedMod {
+	std::filesystem::path modulePath;
+	std::string packageId;
+	ModDef definition{};
+};
+
 class LoaderState {
 public:
 	static LoaderState& GetInstance() {
@@ -12,15 +20,11 @@ public:
 		return instance;
 	}
 
-	void AddMod(const ModDef& modDef) {
-		loadedMods_.push_back(modDef);
-	}
+	void AddMod(LoadedMod mod) { loadedMods_.push_back(std::move(mod)); }
 
-	const std::vector<ModDef>& GetLoadedMods() const {
-		return loadedMods_;
-	}
+	const std::vector<LoadedMod>& GetLoadedMods() const { return loadedMods_; }
 
 private:
-	std::vector<ModDef> loadedMods_;
+	std::vector<LoadedMod> loadedMods_;
 };
 } // namespace Rivet

@@ -102,12 +102,16 @@
     <ClCompile Include="src\Hooks.cpp" />
     <ClCompile Include="src\LoaderFlags.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\package_loader.cpp" />
+    <ClCompile Include="src\package_manifest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\console.h" />
     <ClInclude Include="include\Events.h" />
     <ClInclude Include="include\Hooks.h" />
     <ClInclude Include="include\LoaderFlags.h" />
+    <ClInclude Include="include\package_loader.h" />
+    <ClInclude Include="include\package_manifest.h" />
     <ClInclude Include="include\state.h" />
   </ItemGroup>
   <ItemGroup>

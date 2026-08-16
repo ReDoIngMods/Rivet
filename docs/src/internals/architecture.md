@@ -6,7 +6,7 @@ Rivet is split into three projects:
 - `src/Loader`: the runtime service DLL that loads mods, owns hooks, and dispatches events.
 - `src/Lib`: public headers used by mods.
 
-The design goal is to keep mod binaries simple. Mods include headers, export a `ModDef`, and call a small C ABI exported by `RivetLoader.dll`. They do not link a Rivet import library, initialise MinHook, or coordinate directly with other mods.
+The design goal is to keep mod binaries simple. Mods include headers, export an entrypoint-only `ModDef`, and declare metadata and dependencies in Thunderstore's `manifest.json`. They do not need to initialise MinHook or coordinate directly with other mods.
 
 ## Startup Flow
 
@@ -16,8 +16,10 @@ Game starts
   -> RivetDoorstop proxies real Version APIs
   -> RivetDoorstop loads RivetLoader.dll if enabled
   -> RivetLoader initialises MinHook and internal hooks
-  -> RivetLoader scans Mods for DLLs
-  -> each Rivet mod entry function registers hooks and event subscribers
+  -> RivetLoader scans Mods for Thunderstore package directories
+  -> RivetLoader resolves manifest dependencies
+  -> RivetLoader loads support DLLs and Rivet mod DLLs
+  -> each Rivet mod entrypoint registers hooks and event subscribers
   -> RivetLoader publishes RivetInitialized
 ```
 

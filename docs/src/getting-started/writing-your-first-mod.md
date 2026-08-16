@@ -1,6 +1,6 @@
 # Writing Your First Mod
 
-This walkthrough builds a minimal Rivet mod from scratch: a DLL that prints a message when Rivet finishes loading and again when the game's Lua VM is ready. By the end you will have a working `.dll` you can drop into the game's `Mods` directory.
+This walkthrough builds a minimal Rivet mod from scratch: a DLL that prints a message when Rivet finishes loading and again when the game's Lua VM is ready. By the end you will have a Thunderstore-style package for Rivet's `Mods` directory.
 
 ## What you need
 
@@ -46,25 +46,26 @@ static void MyFirstModEntry() {
     Rivet::Events::Subscribe<Rivet::BuiltinEvents::LuaInitialized>(&OnLuaReady);
 }
 
-RIVET_REGISTER_MOD(MyFirstModEntry, "Your Name", "MyFirstMod")
+RIVET_REGISTER_MOD(MyFirstModEntry)
 ```
 
 That's the whole mod. Three pieces:
 
 - **`MyFirstModEntry`** is the entry function. Rivet calls it once when your mod loads. Use it to register subscriptions and install hooks. Don't do heavy work here.
 - **`Subscribe<T>(handler)`** registers `handler` to fire whenever someone publishes an event of type `T`. The handler runs synchronously on whichever thread published the event.
-- **`RIVET_REGISTER_MOD(entry, author, name)`** is what marks your DLL as a Rivet mod. The macro exports the `GET_RIVET_MOD_DEF` symbol that the loader looks for.
+- **`RIVET_REGISTER_MOD(entry)`** marks your DLL as a Rivet mod. The macro exports the `GET_RIVET_MOD_DEF` symbol that the loader looks for. Package metadata belongs in `manifest.json`.
 
 ## 3. Build and install
 
-1. Build the project. You'll get `MyFirstMod.dll` in your output folder.
-2. Copy it into the `Mods` directory in your game folder (next to `version.dll` and `Rivet.dll`). Create the directory if it doesn't exist.
-3. Launch the game.
+1. Build the project and place the DLL at the root of a package directory named `Team-MyFirstMod-1.0.0`.
+2. Add a Thunderstore `manifest.json` beside it with `name`, `version_number`, `website_url`, `description`, and `dependencies`.
+3. Place that package directory in Rivet's configured `Mods` directory.
+4. Launch the game.
 
 You should see a Rivet console window log:
 
 ```text
-[INFO] Loaded mod: MyFirstMod by Your Name
+[INFO] Loaded Rivet mod DLL: MyFirstMod.dll (Team-MyFirstMod-1.0.0)
 [INFO] Rivet Loader initialized. 1 mods loaded.
 ```
 
@@ -72,7 +73,7 @@ Followed by your `MyFirstMod loaded!` message box. When the game gets to its Lua
 
 ## What just happened
 
-When the game launches, Doorstop loads Rivet. Rivet scans the `Mods` directory, calls `LoadLibraryA` on `MyFirstMod.dll`, finds your `GET_RIVET_MOD_DEF` export, and calls your entry function. Your entry registers two subscriptions in Rivet's internal event tables.
+When the game launches, Doorstop loads Rivet. Rivet discovers the package manifest, resolves its dependencies, loads root-level DLLs, finds `GET_RIVET_MOD_DEF`, and calls your entrypoint. Your entry registers two subscriptions in Rivet's internal event tables.
 
 Later, when Rivet finishes loading all mods, it publishes a `RivetInitialized` event, which fires your `OnRivetReady` handler. When the game itself calls its `LuaVM_Initialize` function, Rivet's hook on that function publishes a `LuaInitialized` event, firing your `OnLuaReady` handler.
 
@@ -92,4 +93,4 @@ Your mod never called any of the game's code directly. It never touched MinHook.
 
 **My handler never runs.** Check the spelling of the event type and that you're subscribing in your entry function (not in `DllMain`, which runs before Rivet has set up its tables).
 
-**Rivet warns "DLL is not a valid Rivet mod".** This means your DLL loaded but the loader couldn't find the `GET_RIVET_MOD_DEF` export. Same fix as above.
+**Rivet does not invoke my DLL.** Confirm it is at the root of a package directory with a valid Thunderstore manifest and that `RIVET_REGISTER_MOD(...)` is compiled into the DLL.

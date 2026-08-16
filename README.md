@@ -1,12 +1,14 @@
 # Rivet
 
-Rivet is a native modding toolkit for Scrap Mechanic. It injects a loader into the game process, loads mod DLLs from a configured directory, and gives mods shared event and hook APIs so they can coordinate without overwriting each other.
+Rivet is a native mod loader for Scrap Mechanic. It injects a loader into the game process, discovers Thunderstore-style packages, resolves their dependencies, and invokes the entrypoints exported by Rivet mod DLLs.
 
 Rivet consists of:
 
 - `RivetDoorstop`: a `version.dll` proxy that loads Rivet into the game process.
 - `RivetLoader`: the runtime loader that discovers mods, owns hooks, and dispatches events.
-- `RivetLib`: the public headers mods include to use Rivet APIs.
+- `RivetLib`: the public headers mods include to use optional Rivet APIs.
+
+Each mod DLL exports only `GET_RIVET_MOD_DEF`, whose descriptor contains an entrypoint. Package metadata and dependencies live in Thunderstore's standard `manifest.json`.
 
 Documentation lives in [`docs/`](./docs/src/introduction.md), is built with mdBook, and publishes to GitHub Pages.
 

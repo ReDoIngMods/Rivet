@@ -1,14 +1,13 @@
 #pragma once
 
 namespace Rivet {
-/// <summary>
-/// A mod definition, returned by the GET_RIVET_MOD_DEF export of a mod DLL.
-/// `entry` is called once after the mod is loaded; the mod uses it to
-/// register event subscriptions via Rivet::Events::Subscribe.
-/// </summary>
+using ModEntrypoint = void (*)();
+
+/// The only data exchanged between Rivet and a loaded mod DLL.
+///
+/// Package metadata belongs in Thunderstore's manifest.json. This descriptor
+/// only supplies the code entrypoint that Rivet invokes after loading.
 struct ModDef {
-	void (*entry)();
-	const char* (*getName)();
-	const char* (*getAuthor)();
+	ModEntrypoint entrypoint;
 };
 } // namespace Rivet

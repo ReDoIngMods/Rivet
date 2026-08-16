@@ -9,3 +9,4 @@ vcpkg_installed
 .tools/
 docs/book/
 docs/*.log
+Mods/

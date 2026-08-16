@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\rivet\defines.h" />
-    <ClInclude Include="include\rivet\imod.h" />
     <ClInclude Include="include\rivet\logging.h" />
     <ClInclude Include="include\rivet\memory\FunctionScanner.h" />
     <ClInclude Include="include\rivet\memory\PeHeaders.h" />
